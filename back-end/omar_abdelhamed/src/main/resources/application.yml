@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: omar_abdelhamed
+
+  messages:
+    basename: i18n/messages
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/restorant
+    username: root
+    password: 12345
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+server:
+  port: 7070
