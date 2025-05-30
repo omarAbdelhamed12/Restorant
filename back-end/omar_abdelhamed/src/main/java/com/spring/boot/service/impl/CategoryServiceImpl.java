@@ -31,7 +31,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public CategoryDto createCategory(CategoryDto categoryDto) throws SystemException {
+    public CategoryDto createCategory(CategoryDto categoryDto){
         if (Objects.nonNull(categoryDto.getId())) {
             throw new CustomSystemException("error.id.invalid");
         }
@@ -45,13 +45,13 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public List<CategoryDto> saveListOfCategoryDto(List<CategoryDto> categoryDtoList) throws SystemException {
+    public List<CategoryDto> saveListOfCategoryDto(List<CategoryDto> categoryDtoList){
         if (Objects.nonNull(categoryDtoList.get(0).getId())) {
-            throw new SystemException("error.id.invalid");
+            throw new CustomSystemException("error.id.invalid");
         }
         Optional<Category> category = categoryRepo.findByName(categoryDtoList.get(0).getName());
         if (category.isPresent()) {
-            throw new SystemException("error.categoryName.unfound");
+            throw new CustomSystemException("error.categoryName.unfound");
         }
         Category category1 = CategoryMapper.CATEGORY_MAPPER.toCategory(categoryDtoList.get(0));
         categoryRepo.save(category1);
@@ -60,13 +60,13 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public CategoryDto updateCategory(CategoryDto categoryDto) throws SystemException {
+    public CategoryDto updateCategory(CategoryDto categoryDto){
         if (Objects.isNull(categoryDto.getId())) {
-            throw new SystemException("error.id.valid");
+            throw new CustomSystemException("error.id.valid");
         }
         Optional<Category> category = categoryRepo.findById(categoryDto.getId());
         if (category.isEmpty()) {
-            throw new SystemException("error.category.notfound");
+            throw new CustomSystemException("error.category.notfound");
         }
         Category category1 = CategoryMapper.CATEGORY_MAPPER.toCategory(categoryDto);
         categoryRepo.save(category1);
@@ -74,16 +74,16 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public List<CategoryDto> updateListOfCategory(List<CategoryDto> categoryDtoList) throws SystemException {
+    public List<CategoryDto> updateListOfCategory(List<CategoryDto> categoryDtoList){
         List<CategoryDto> updatedList = new ArrayList<>();
 
         for (CategoryDto dto : categoryDtoList) {
             if (dto.getId() == null) {
-                throw new SystemException("error.id.invalid");
+                throw new CustomSystemException("error.id.invalid");
             }
             Optional<Category> existingCategory = categoryRepo.findById(dto.getId());
             if (existingCategory.isEmpty()) {
-                throw new SystemException("error.category.notfound");
+                throw new CustomSystemException("error.category.notfound");
             }
 
             Category updatedCategory = CategoryMapper.CATEGORY_MAPPER.toCategory(dto);
@@ -95,7 +95,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public boolean deleteCategoryById(Long id) throws SystemException {
+    public boolean deleteCategoryById(Long id){
         Optional<Category> category = categoryRepo.findById(id);
         if (category.isEmpty()) {
             return false;
@@ -105,7 +105,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public boolean deleteListOfCategoryDtoByListOfId(List<Long> idList) throws SystemException {
+    public boolean deleteListOfCategoryDtoByListOfId(List<Long> idList){
         List<Long> notFoundIds = new ArrayList<>();
         for (Long id : idList) {
             if (categoryRepo.existsById(id)) {
@@ -115,7 +115,7 @@ public class CategoryServiceImpl implements CategoryService {
             }
         }
         if (!notFoundIds.isEmpty()) {
-            throw new SystemException("error.category.notfound");
+            throw new CustomSystemException("error.category.notfound");
         }
 
         return true;

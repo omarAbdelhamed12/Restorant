@@ -2,6 +2,7 @@ package com.spring.boot.service.impl;
 
 import com.spring.boot.dto.CategoryDto;
 import com.spring.boot.dto.ProductDto;
+import com.spring.boot.exception.CustomSystemException;
 import com.spring.boot.model.Category;
 import com.spring.boot.model.Product;
 import com.spring.boot.modelMapper.ProductMapper;
@@ -27,35 +28,35 @@ public class ProductServiceImpl  implements ProductService {
     private CategoryRepo categoryRepo;
 
 
-
     @Override
-    public List<ProductDto> getProductsByCategoryId(Long categoryId) throws SystemException {
+    public List<ProductDto> findAllProductDto() {
+        List<Product> products = productRepo.findAll();
 
-        if(Objects.isNull(categoryId)){
-            throw new SystemException("error.id.invalid");
-        }
-        Optional<Category>category = categoryRepo.findById(categoryId);
-         if(category.isEmpty()){
-             throw new SystemException("error.categoryName.unfound");
-         }
-        List<Product> products = productRepo.findProductsByCategoryId(categoryId);
-        List<ProductDto> productDtos=new ArrayList<>();
-        for (Product product : products) {
-            ProductDto productDto = ProductMapper.PRODUCT_MAPPER.toProductDto(product);
-            productDto.setCategory(null);
-            productDtos.add(productDto);
-        }
-        return productDtos;
+        return getProductDtos(products);
     }
 
     @Override
-    public ProductDto createProduct(ProductDto productDto) throws SystemException {
+    public List<ProductDto> getProductsByCategoryId(Long categoryId) {
+
+        if(Objects.isNull(categoryId)){
+            throw new CustomSystemException("error.id.invalid");
+        }
+        Optional<Category>category = categoryRepo.findById(categoryId);
+         if(category.isEmpty()){
+             throw new CustomSystemException("error.categoryName.unfound");
+         }
+        List<Product> products = productRepo.findProductsByCategoryId(categoryId);
+        return getProductDtos(products);
+    }
+
+    @Override
+    public ProductDto createProduct(ProductDto productDto){
         if(Objects.nonNull(productDto.getId())){
-            throw new SystemException("error.idProduct.invalid");
+            throw new CustomSystemException("error.idProduct.invalid");
         }
          Optional<Product> product = productRepo.findByName(productDto.getName());
         if(product.isPresent()){
-            throw new SystemException("error.productName.found");
+            throw new CustomSystemException("error.productName.found");
         }
         Product product1 = ProductMapper.PRODUCT_MAPPER.toProduct(productDto);
         productRepo.save(product1);
@@ -63,13 +64,13 @@ public class ProductServiceImpl  implements ProductService {
     }
 
     @Override
-    public List<ProductDto> saveListOfProduct(List<ProductDto> productDtoList) throws SystemException {
+    public List<ProductDto> saveListOfProduct(List<ProductDto> productDtoList){
         if(Objects.nonNull(productDtoList.get(0).getId())){
-            throw new SystemException("error.idProduct.invalid");
+            throw new CustomSystemException("error.idProduct.invalid");
         }
         Optional<Product> product = productRepo.findByName(productDtoList.get(0).getName());
         if(product.isPresent()){
-            throw new SystemException("error.productName.unfound");
+            throw new ClassCastException("error.productName.unfound");
         }
         Product product1 = ProductMapper.PRODUCT_MAPPER.toProduct(productDtoList.get(0));
         productRepo.save(product1);
@@ -78,13 +79,13 @@ public class ProductServiceImpl  implements ProductService {
     }
 
     @Override
-    public ProductDto updateProduct(ProductDto productDto) throws SystemException {
+    public ProductDto updateProduct(ProductDto productDto){
         if(Objects.isNull(productDto.getId())){
-            throw new SystemException("error.idProduct.valid");
+            throw new CustomSystemException("error.idProduct.valid");
         }
         Optional<Product> product = productRepo.findById(productDto.getId());
         if(product.isEmpty()){
-            throw new SystemException("error.product.notfound");
+            throw new CustomSystemException("error.product.notfound");
         }
         Product product1 = ProductMapper.PRODUCT_MAPPER.toProduct(productDto);
         productRepo.save(product1);
@@ -92,15 +93,15 @@ public class ProductServiceImpl  implements ProductService {
     }
 
     @Override
-    public List<ProductDto> updateListOfProduct(List<ProductDto> productDtoList) throws SystemException {
+    public List<ProductDto> updateListOfProduct(List<ProductDto> productDtoList){
         List<ProductDto> updateList=new ArrayList<>();
         for (ProductDto productDto : productDtoList) {
         if (Objects.isNull(productDto.getId())){
-            throw new SystemException("error.idProduct.invalid");
+            throw new CustomSystemException("error.idProduct.invalid");
         }
         Optional<Product> product = productRepo.findById(productDto.getId());
         if (product.isEmpty()) {
-            throw new SystemException( "error.productName.unfound");
+            throw new CustomSystemException("error.productName.unfound");
         }
 
         Product product1 = ProductMapper.PRODUCT_MAPPER.toProduct(productDto);
@@ -121,7 +122,7 @@ public class ProductServiceImpl  implements ProductService {
     }
 
     @Override
-    public boolean deleteListOfProductByIdList(List<Long> idList) throws SystemException {
+    public boolean deleteListOfProductByIdList(List<Long> idList){
         List<Long> notFoundIds = new ArrayList<>();
 
         for (Long id : idList) {
@@ -133,10 +134,36 @@ public class ProductServiceImpl  implements ProductService {
         }
 
         if (!notFoundIds.isEmpty()) {
-            throw new SystemException("error.productName.unfound");
+            throw new CustomSystemException("error.productName.unfound");
         }
 
         return true;
+    }
+
+    @Override
+    public  List<ProductDto> searchProductDto(String searchValue){
+        if(Objects.isNull(searchValue) || searchValue.trim().isEmpty()) {
+            throw new CustomSystemException("error.searchValue.found");
+        }
+
+        List<Product> product = productRepo.
+                findByNameContainingIgnoreCaseOrDescriptionContainingIgnoreCase(searchValue,searchValue);
+        if (product.isEmpty()) {
+            throw new CustomSystemException("error.searchValue.found");
+        }
+        return getProductDtos(product);
+    }
+
+
+
+    private static List<ProductDto> getProductDtos(List<Product> product){
+        List<ProductDto> productDtos=new ArrayList<>();
+        for (Product product1 : product) {
+            ProductDto productDto = ProductMapper.PRODUCT_MAPPER.toProductDto(product1);
+            productDto.setCategory(null);
+            productDtos.add(productDto);
+        }
+        return productDtos;
     }
 
 

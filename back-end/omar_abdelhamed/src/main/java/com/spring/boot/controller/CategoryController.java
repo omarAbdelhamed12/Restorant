@@ -4,6 +4,7 @@ import com.spring.boot.dto.CategoryDto;
 import com.spring.boot.service.CategoryService;
 import jakarta.transaction.SystemException;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,12 +15,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
+@RequestMapping("/api/category")
+@RequiredArgsConstructor
+@CrossOrigin("http://localhost:4200")
 public class CategoryController {
 
     @Autowired
      private CategoryService categoryService;
 
-    @GetMapping("/all")
+    @GetMapping("/getAll")
     public ResponseEntity<List<CategoryDto>> findAllCategoryDto() {
         return ResponseEntity.ok(categoryService.findAllCategoryDto());
 
@@ -50,7 +54,7 @@ public class CategoryController {
                 ResponseEntity.notFound().build();
     }
     @DeleteMapping("/deleteListOfCategory")
-    public ResponseEntity<String> deleteListOfCategory(@RequestParam("idList") List<Long> idList) {
+    public ResponseEntity<String> deleteListOfCategory(@RequestParam("idList") List<Long> idList) throws SystemException {
             try {
                 categoryService.deleteListOfCategoryDtoByListOfId(idList);
                 return ResponseEntity.ok("Products deleted successfully.");
