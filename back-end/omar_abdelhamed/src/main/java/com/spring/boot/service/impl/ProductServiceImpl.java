@@ -9,7 +9,6 @@ import com.spring.boot.modelMapper.ProductMapper;
 import com.spring.boot.repo.CategoryRepo;
 import com.spring.boot.repo.ProductRepo;
 import com.spring.boot.service.ProductService;
-import jakarta.transaction.SystemException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

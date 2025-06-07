@@ -9,10 +9,24 @@ import {Product} from '../model/product';
 })
 export class ProductService {
 
-  url = 'http://localhost:7070/api/product/getAll';
+  baseUrl = 'http://localhost:7070/api/product';
   constructor(private http: HttpClient) { }
   getAllProducts(): Observable<Product[]> {
-    return this.http.get<Product[]>(this.url).pipe(
+    return this.http.get<Product[]>(this.baseUrl + '/getAll').pipe(
+      map(
+        response => response
+      )
+    );
+  }
+  getProductsByCategoryId(id): Observable<Product[]> {
+    return this.http.get<Product[]>(this.baseUrl + '/allProductByCategoryId/' + id).pipe(
+      map(
+        response => response
+      )
+    );
+  }
+  getProductsByName(key): Observable<Product[]> {
+    return this.http.get<Product[]>(this.baseUrl + '/productSearch?productSearch=' + key).pipe(
       map(
         response => response
       )

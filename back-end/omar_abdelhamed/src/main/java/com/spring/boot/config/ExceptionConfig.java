@@ -27,13 +27,13 @@ public class ExceptionConfig {
     @ExceptionHandler(CustomSystemException.class)
     public ResponseEntity<ExceptionResponseVm> handleSystemException(CustomSystemException exception) {
        BundleMessage bundleMessage =  bundleTranslatorService.getBundleMessageInEnglishAndArabic(exception.getMessage());
-        return ResponseEntity.ok(new ExceptionResponseVm(List.of(bundleMessage), HttpStatus.NOT_ACCEPTABLE));
+        return ResponseEntity.ok(new ExceptionResponseVm(List.of(bundleMessage)));
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ExceptionResponseVm> handleValidationExceptions(MethodArgumentNotValidException ex) {
 
-        ExceptionResponseVm exceptions = new ExceptionResponseVm(new ArrayList<>(), HttpStatus.BAD_REQUEST);
+        ExceptionResponseVm exceptions = new ExceptionResponseVm(new ArrayList<>());
 
         for (FieldError error : ex.getBindingResult().getFieldErrors()) {
             try {

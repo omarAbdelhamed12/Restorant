@@ -2,6 +2,7 @@ package com.spring.boot.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.spring.boot.model.Category;
+import com.spring.boot.model.User;
 import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotEmpty;
@@ -23,6 +24,8 @@ public class ProductDto {
     @DecimalMin(value = "100.0", message = "product.price.min")
     @DecimalMax(value = "5000.0", message ="product.price.max")
     private float price;
+
+    private Long userId;
 
 
     @NotNull(message = "product.category.required")

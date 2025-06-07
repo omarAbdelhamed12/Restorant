@@ -11,7 +11,7 @@ import {FooterComponent} from './componants/footer/footer.component';
 import { ChefsComponent } from './componants/chefs/chefs.component';
 import { ContactInfoComponent } from './componants/contact-info/contact-info.component';
 import {APP_BASE_HREF} from '@angular/common';
-import {HttpClientModule} from "@angular/common/http";
+import {HttpClientModule} from '@angular/common/http';
 
 // http://localhost:4200/
 export const routes: Routes = [
@@ -21,6 +21,8 @@ export const routes: Routes = [
   {path: 'cardDetails', component: CardDetailsComponent},
   {path: 'contact-info', component: ContactInfoComponent},
   {path: 'chefs', component: ChefsComponent},
+  {path: 'category/:id', component: ProductsComponent},
+  {path: 'search/:key', component: ProductsComponent},
   // http://localhost:4200/
   {path: '', redirectTo: '/products', pathMatch: 'full'},
 

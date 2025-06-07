@@ -14,13 +14,10 @@ public class ExceptionResponseVm {
 
     private List<BundleMessage> errorMessages;
 
-    private HttpStatus httpStatus;
 
-    private LocalDate localDate;
 
-    public ExceptionResponseVm(List<BundleMessage> errorMessages, HttpStatus httpStatus) {
+    public ExceptionResponseVm(List<BundleMessage> errorMessages ) {
         this.errorMessages = errorMessages;
-        this.httpStatus = httpStatus;
-        this.localDate = LocalDate.now();
+
     }
 }

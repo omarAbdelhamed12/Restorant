@@ -24,8 +24,8 @@ public class ProductController {
         return ResponseEntity.ok(productService.findAllProductDto());
     }
 
-    @GetMapping("/allProductByCategoryId")
-    public ResponseEntity<List<ProductDto>> allProductByCategoryId(@RequestParam Long categoryId)  {
+    @GetMapping("/allProductByCategoryId/{categoryId}")
+    public ResponseEntity<List<ProductDto>> allProductByCategoryId(@PathVariable Long categoryId)  {
         return ResponseEntity.ok(productService.getProductsByCategoryId(categoryId));
     }
     @PostMapping("/creatProduct")
