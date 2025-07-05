@@ -3,6 +3,7 @@ package com.spring.boot.dto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.spring.boot.model.Category;
 import com.spring.boot.model.User;
+import com.spring.boot.vm.CategoryVm;
 import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotEmpty;
@@ -29,5 +30,5 @@ public class ProductDto {
 
 
     @NotNull(message = "product.category.required")
-    private Category category;
+    private CategoryVm category;
 }

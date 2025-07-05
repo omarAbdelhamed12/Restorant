@@ -27,4 +27,10 @@ public class User {
     @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
     private List<ContactInfo> contactInfos;
 
+    @ManyToOne
+    @JoinColumn(name = "order_id")
+    private Order order;
+
+
+
 }

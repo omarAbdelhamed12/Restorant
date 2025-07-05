@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Entity
 @Getter
 @Setter
@@ -27,5 +29,6 @@ public class Product {
     @JoinColumn(nullable = false,name = "category_id")
     private Category category;
 
-
+    @ManyToMany(mappedBy = "products",fetch = FetchType.EAGER)
+    private List<Order> orders;
 }

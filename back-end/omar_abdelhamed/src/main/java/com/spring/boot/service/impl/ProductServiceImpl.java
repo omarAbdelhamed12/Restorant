@@ -1,5 +1,6 @@
 package com.spring.boot.service.impl;
 
+import com.spring.boot.controller.vm.ProductResponseVm;
 import com.spring.boot.dto.CategoryDto;
 import com.spring.boot.dto.ProductDto;
 import com.spring.boot.exception.CustomSystemException;
@@ -9,8 +10,13 @@ import com.spring.boot.modelMapper.ProductMapper;
 import com.spring.boot.repo.CategoryRepo;
 import com.spring.boot.repo.ProductRepo;
 import com.spring.boot.service.ProductService;
+import jakarta.validation.constraints.Max;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,17 +31,28 @@ public class ProductServiceImpl  implements ProductService {
     private ProductRepo productRepo;
     @Autowired
     private CategoryRepo categoryRepo;
+   // @Autowired
+    //private ProductMapper productMapper;
 
 
     @Override
-    public List<ProductDto> findAllProductDto() {
-        List<Product> products = productRepo.findAll();
+    public ProductResponseVm findAllProductDto(int pageNumber, int pageSize) {
+        if ( Objects.isNull(pageNumber) || pageNumber < 1) {
+            throw new CustomSystemException("number.of.page");
+        }
+        if (Objects.isNull(pageSize) || pageSize < 1) {
+            throw new CustomSystemException("size.of.page");
+        }
+        Pageable pageable = PageRequest.of(pageNumber - 1 , pageSize);
+       Page<Product> products = productRepo.findAllByOrderByIdAsc(pageable);
 
-        return getProductDtos(products);
+       return new ProductResponseVm(products.getContent().stream().map(ProductMapper.PRODUCT_MAPPER::toProductDto).toList(),
+               products.getTotalElements());
+//        return getProductDtos(products.getContent());
     }
 
     @Override
-    public List<ProductDto> getProductsByCategoryId(Long categoryId) {
+    public ProductResponseVm getProductsByCategoryId(Long categoryId, int pageNumber, int pageSize) {
 
         if(Objects.isNull(categoryId)){
             throw new CustomSystemException("error.id.invalid");
@@ -44,8 +61,17 @@ public class ProductServiceImpl  implements ProductService {
          if(category.isEmpty()){
              throw new CustomSystemException("error.categoryName.unfound");
          }
-        List<Product> products = productRepo.findProductsByCategoryId(categoryId);
-        return getProductDtos(products);
+        if ( Objects.isNull(pageNumber) || pageNumber < 1) {
+            throw new CustomSystemException("number.of.page");
+        }
+        if (Objects.isNull(pageSize) || pageSize < 1) {
+            throw new CustomSystemException("size.of.page");
+        }
+        Pageable pageable = PageRequest.of(pageNumber - 1 , pageSize);
+        Page<Product> products = productRepo.findProductsByCategoryId(categoryId ,pageable);
+        return new ProductResponseVm(products.getContent().stream().map(ProductMapper.PRODUCT_MAPPER::toProductDto).toList(),
+                products.getTotalElements());
+//        return getProductDtos(products);
     }
 
     @Override
@@ -140,30 +166,53 @@ public class ProductServiceImpl  implements ProductService {
     }
 
     @Override
-    public  List<ProductDto> searchProductDto(String searchValue){
+    public ProductResponseVm searchProductDto(String searchValue , int pageNumber, int pageSize){
+
         if(Objects.isNull(searchValue) || searchValue.trim().isEmpty()) {
             throw new CustomSystemException("error.searchValue.found");
         }
-
-        List<Product> product = productRepo.
-                findByNameContainingIgnoreCaseOrDescriptionContainingIgnoreCase(searchValue,searchValue);
+        if ( Objects.isNull(pageNumber) || pageNumber < 1) {
+            throw new CustomSystemException("number.of.page");
+        }
+        if (Objects.isNull(pageSize) || pageSize < 1) {
+            throw new CustomSystemException("size.of.page");
+        }
+        Pageable pageable = PageRequest.of(pageNumber - 1 , pageSize);
+        Page<Product> product = productRepo.
+                findByNameContainingIgnoreCaseOrDescriptionContainingIgnoreCase(searchValue,searchValue,pageable);
         if (product.isEmpty()) {
             throw new CustomSystemException("error.searchValue.found");
         }
-        return getProductDtos(product);
+
+        return new ProductResponseVm(product.getContent().stream().map(ProductMapper.PRODUCT_MAPPER::toProductDto).toList(),
+                product.getTotalElements());
     }
 
-
-
-    private static List<ProductDto> getProductDtos(List<Product> product){
-        List<ProductDto> productDtos=new ArrayList<>();
-        for (Product product1 : product) {
-            ProductDto productDto = ProductMapper.PRODUCT_MAPPER.toProductDto(product1);
-            productDto.setCategory(null);
-            productDtos.add(productDto);
+    @Override
+    public ProductResponseVm searchByCategoryIdAndKeyWord(Long categoryId, String searchValue, int pageNumber, int pageSize) {
+        if ( Objects.isNull(pageNumber) || pageNumber < 1) {
+            throw new CustomSystemException("number.of.page");
         }
-        return productDtos;
+        if (Objects.isNull(pageSize) || pageSize < 1) {
+            throw new CustomSystemException("size.of.page");
+        }
+        Pageable pageable = PageRequest.of(pageNumber - 1 , pageSize);
+        Page<Product> product = productRepo.
+                findByNameContainingIgnoreCaseOrDescriptionContainingIgnoreCaseAndCategoryId(searchValue,searchValue,categoryId,pageable);
+        return new ProductResponseVm(product.getContent().stream().map(ProductMapper.PRODUCT_MAPPER::toProductDto).toList(),
+                product.getTotalElements());
     }
+
+
+//    private static List<ProductDto> getProductDtos(List<Product> product){
+//        List<ProductDto> productDtos=new ArrayList<>();
+//        for (Product product1 : product) {
+//            ProductDto productDto = ProductMapper.PRODUCT_MAPPER.toProductDto(product1);
+//            productDto.setCategory(null);
+//            productDtos.add(productDto);
+//        }
+//        return productDtos;
+//    }
 
 
 }

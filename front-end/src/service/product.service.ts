@@ -11,25 +11,44 @@ export class ProductService {
 
   baseUrl = 'http://localhost:7070/api/product';
   constructor(private http: HttpClient) { }
-  getAllProducts(): Observable<Product[]> {
-    return this.http.get<Product[]>(this.baseUrl + '/getAll').pipe(
+  getAllProducts(pageNumber, pageSize): Observable<Product[]> {
+    return this.http.get<Product[]>(`${this.baseUrl}/getAll?pageNumber=${pageNumber}&pageSize=${pageSize}`).pipe(
+    // return this.http.get<Product[]>(this.baseUrl + '/getAll' ).pipe(
       map(
         response => response
       )
     );
   }
-  getProductsByCategoryId(id): Observable<Product[]> {
-    return this.http.get<Product[]>(this.baseUrl + '/allProductByCategoryId/' + id).pipe(
+  getProductsByCategoryId(id, pageNumber, pageSize): Observable<Product[]> {
+    // tslint:disable-next-line:max-line-length
+    return this.http.get<Product[]>(`${this.baseUrl}/allProductByCategoryId/${id}?pageNumber=${pageNumber}&pageSize=${pageSize}`).pipe(
+    // return this.http.get<Product[]>(this.baseUrl + '/allProductByCategoryId/' + id).pipe(
       map(
         response => response
       )
     );
   }
-  getProductsByName(key): Observable<Product[]> {
-    return this.http.get<Product[]>(this.baseUrl + '/productSearch?productSearch=' + key).pipe(
+  getProductsByName(key, pageNumber, pageSize): Observable<Product[]> {
+    // tslint:disable-next-line:max-line-length
+    return this.http.get<Product[]>(`${this.baseUrl}/productSearch?productSearch=${key}&pageNumber=${pageNumber}&pageSize=${pageSize}`).pipe(
+
+    // return this.http.get<Product[]>(this.baseUrl + '/productSearch?productSearch=' + key).pipe(
       map(
         response => response
       )
     );
   }
+
+  searchByCategoryIdAndKey(id, key, pageNumber, pageSize ): Observable<Product[]> {
+    // tslint:disable-next-line:max-line-length
+    return this.http.get<Product[]>(`${this.baseUrl}/categorySearch?categoryId=${id}&productSearch=${key}&pageNumber=${pageNumber}&pageSize=${pageSize}`).pipe(
+
+      // return this.http.get<Product[]>(this.baseUrl + '/productSearch?productSearch=' + key).pipe(
+      map(
+        response => response
+      )
+    );
+  }
+
+
 }

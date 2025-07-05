@@ -1,12 +1,18 @@
 package com.spring.boot.controller;
 
+import com.spring.boot.controller.vm.ProductResponseVm;
 import com.spring.boot.dto.ProductDto;
  import com.spring.boot.service.ProductService;
 import jakarta.transaction.SystemException;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -15,18 +21,22 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/product")
 @CrossOrigin("http://localhost:4200")
+@Validated
 public class ProductController {
     @Autowired
     private ProductService productService;
 
     @GetMapping("/getAll")
-    public ResponseEntity<List<ProductDto>> findAllProductDto() {
-        return ResponseEntity.ok(productService.findAllProductDto());
+    public ResponseEntity<ProductResponseVm> findAllProductDto(@RequestParam("pageNumber")   int pageNumber,
+                                                              @RequestParam("pageSize")      int pageSize) {
+        return ResponseEntity.ok(productService.findAllProductDto(pageNumber,pageSize));
     }
 
     @GetMapping("/allProductByCategoryId/{categoryId}")
-    public ResponseEntity<List<ProductDto>> allProductByCategoryId(@PathVariable Long categoryId)  {
-        return ResponseEntity.ok(productService.getProductsByCategoryId(categoryId));
+    public ResponseEntity<ProductResponseVm> allProductByCategoryId(@PathVariable Long categoryId,
+                                                                   @RequestParam("pageNumber") int pageNumber,
+                                                                   @RequestParam("pageSize")  int pageSize)  {
+        return ResponseEntity.ok(productService.getProductsByCategoryId(categoryId,pageNumber,pageSize));
     }
     @PostMapping("/creatProduct")
     public ResponseEntity<ProductDto> createProduct(@RequestBody @Valid ProductDto productDto)   {
@@ -62,8 +72,21 @@ public class ProductController {
     }
 
     @GetMapping("/productSearch")
-    public ResponseEntity<List<ProductDto>> productSearch(@RequestParam("productSearch") String searchValue)   {
-        return ResponseEntity.ok(productService.searchProductDto(searchValue));
+    public ResponseEntity<ProductResponseVm> productSearch(@RequestParam("productSearch") String searchValue ,
+                                                           @RequestParam("pageNumber")   int pageNumber,
+                                                           @RequestParam("pageSize")      int pageSize)   {
+        return ResponseEntity.ok(productService.searchProductDto(searchValue,pageNumber,pageSize));
     }
+
+    @GetMapping("/categorySearch")
+    public ResponseEntity<ProductResponseVm> productSearch(
+            @RequestParam("categoryId") Long categoryId,
+            @RequestParam("searchValue") String searchValue,
+            @RequestParam("pageNumber") int pageNumber,
+            @RequestParam("pageSize") int pageSize)
+    {
+        return ResponseEntity.ok(productService.searchByCategoryIdAndKeyWord(categoryId, searchValue, pageNumber, pageSize));
+    }
+
 
 }

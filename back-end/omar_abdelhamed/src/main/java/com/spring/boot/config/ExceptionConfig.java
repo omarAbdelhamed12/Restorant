@@ -6,6 +6,8 @@ import com.spring.boot.dto.ExceptionDto;
 import com.spring.boot.exception.CustomSystemException;
 import com.spring.boot.service.bandleService.BandleTranslatorService;
 import jakarta.transaction.SystemException;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -42,6 +44,20 @@ public class ExceptionConfig {
                 exceptions.getErrorMessages().add(new BundleMessage(error.getDefaultMessage(), null));
             }
 
+        }
+
+        return ResponseEntity.ok(exceptions);
+    }
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<ExceptionResponseVm> handleConstraintViolation(ConstraintViolationException ex) {
+        ExceptionResponseVm exceptions = new ExceptionResponseVm(new ArrayList<>());
+
+        for (ConstraintViolation<?> violation : ex.getConstraintViolations()) {
+            try {
+                exceptions.getErrorMessages().add(bundleTranslatorService.getBundleMessageInEnglishAndArabic(violation.getMessage()));
+            } catch (Exception exception) {
+                exceptions.getErrorMessages().add(new BundleMessage(violation.getMessage(), null));
+            }
         }
 
         return ResponseEntity.ok(exceptions);
