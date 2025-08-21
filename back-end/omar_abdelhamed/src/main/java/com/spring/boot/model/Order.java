@@ -24,8 +24,10 @@ public class Order {
     @ManyToMany(fetch = FetchType.EAGER)
     private List<Product> products;
 
-    @OneToMany(mappedBy = "order" ,cascade = CascadeType.ALL)
-    List<User> users;
+
+     @ManyToOne
+     @JoinColumn(nullable = false)
+    private User user;
 
 
 }

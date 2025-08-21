@@ -1,8 +1,13 @@
 package com.spring.boot.service;
 
-import com.spring.boot.dto.OrderDto;
 
+import com.spring.boot.vm.OrderRequestVm;
+import com.spring.boot.vm.OrderResponseVm;
 public interface OrderService {
+    OrderResponseVm requestOrder(OrderRequestVm orderRequestVm);
 
-    OrderDto requestOrder(OrderDto orderDto);
+
+
+
+
 }

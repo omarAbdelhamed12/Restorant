@@ -1,6 +1,5 @@
 package com.spring.boot.model;
 
-import com.spring.boot.Enum.RoleCode;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,11 +13,11 @@ public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false, unique = true)
-    private RoleCode code;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @Column(nullable = false, unique = true)
+    private String code;
+
+    @ManyToMany(mappedBy = "roles", fetch = FetchType.EAGER)
     private List<User> users;
 
 }

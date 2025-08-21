@@ -2,28 +2,40 @@ package com.spring.boot.controller;
 
 import com.spring.boot.dto.CategoryDto;
 import com.spring.boot.service.CategoryService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.transaction.SystemException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+@Tag(
 
+        name = "Category Controller",
+        description = "APIs to create ,insert, delete and update "
+)
 @RestController
 @RequestMapping("/api/category")
 @RequiredArgsConstructor
-@CrossOrigin("http://localhost:4200")
+//@CrossOrigin("http://localhost:4200")
 public class CategoryController {
 
     @Autowired
      private CategoryService categoryService;
 
+    @Operation(
+            summary = "getAll Category API",
+            description = "this API to get all Category."
+    )
     @GetMapping("/getAll")
+    @PreAuthorize("hasAnyRole('USER')")
     public ResponseEntity<List<CategoryDto>> findAllCategoryDto() {
         return ResponseEntity.ok(categoryService.findAllCategoryDto());
 

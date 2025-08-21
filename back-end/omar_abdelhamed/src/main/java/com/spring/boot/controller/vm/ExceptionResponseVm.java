@@ -14,8 +14,6 @@ public class ExceptionResponseVm {
 
     private List<BundleMessage> errorMessages;
 
-
-
     public ExceptionResponseVm(List<BundleMessage> errorMessages ) {
         this.errorMessages = errorMessages;
 

@@ -11,7 +11,7 @@ export class ProductService {
 
   baseUrl = 'http://localhost:7070/api/product';
   constructor(private http: HttpClient) { }
-  getAllProducts(pageNumber, pageSize): Observable<Product[]> {
+  getAllProducts(pageNumber, pageSize): Observable<any> {
     return this.http.get<Product[]>(`${this.baseUrl}/getAll?pageNumber=${pageNumber}&pageSize=${pageSize}`).pipe(
     // return this.http.get<Product[]>(this.baseUrl + '/getAll' ).pipe(
       map(
@@ -19,7 +19,7 @@ export class ProductService {
       )
     );
   }
-  getProductsByCategoryId(id, pageNumber, pageSize): Observable<Product[]> {
+  getProductsByCategoryId(id, pageNumber, pageSize): Observable<any> {
     // tslint:disable-next-line:max-line-length
     return this.http.get<Product[]>(`${this.baseUrl}/allProductByCategoryId/${id}?pageNumber=${pageNumber}&pageSize=${pageSize}`).pipe(
     // return this.http.get<Product[]>(this.baseUrl + '/allProductByCategoryId/' + id).pipe(
@@ -28,7 +28,7 @@ export class ProductService {
       )
     );
   }
-  getProductsByName(key, pageNumber, pageSize): Observable<Product[]> {
+  getProductsByName(key, pageNumber, pageSize): Observable<any> {
     // tslint:disable-next-line:max-line-length
     return this.http.get<Product[]>(`${this.baseUrl}/productSearch?productSearch=${key}&pageNumber=${pageNumber}&pageSize=${pageSize}`).pipe(
 
@@ -39,9 +39,9 @@ export class ProductService {
     );
   }
 
-  searchByCategoryIdAndKey(id, key, pageNumber, pageSize ): Observable<Product[]> {
+  searchByCategoryIdAndKey(id, key, pageNumber, pageSize ): Observable<any> {
     // tslint:disable-next-line:max-line-length
-    return this.http.get<Product[]>(`${this.baseUrl}/categorySearch?categoryId=${id}&productSearch=${key}&pageNumber=${pageNumber}&pageSize=${pageSize}`).pipe(
+    return this.http.get<Product[]>(`${this.baseUrl}/categorySearch?categoryId=${id}&searchValue=${key}&pageNumber=${pageNumber}&pageSize=${pageSize}`).pipe(
 
       // return this.http.get<Product[]>(this.baseUrl + '/productSearch?productSearch=' + key).pipe(
       map(

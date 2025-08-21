@@ -27,6 +27,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public List<CategoryDto> findAllCategoryDto() {
         List<Category> categories= categoryRepo.findAll();
+
         return extractCategory(categories);
     }
 

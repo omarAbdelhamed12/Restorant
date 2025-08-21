@@ -2,6 +2,8 @@ import {Component, OnInit} from '@angular/core';
 import {ProductService} from '../../../service/product.service';
 import {Product} from '../../../model/product';
 import {ActivatedRoute} from '@angular/router';
+import {CardService} from '../../../service/card.service';
+import {CardOrder} from '../../../model/card-order';
 
 @Component({
   selector: 'app-products',
@@ -11,13 +13,18 @@ import {ActivatedRoute} from '@angular/router';
 export class ProductsComponent implements OnInit {
   products: Product[] = [];
   pageNumber = 1;
-  pageSize = 6;
+  pageSize = 5;
   collectionSize: number;
+  messageAr = '';
+  messageEn = '';
+
+  isCategoryProductExists = false;
+  isProductExist = false;
   ngOnInit(): void {
     this.activatedRoute.paramMap.subscribe(( ) => this.handelAllAction(this.pageNumber));
 
   }
-  constructor(private  productService: ProductService, private activatedRoute: ActivatedRoute) { }
+  constructor(private  productService: ProductService, private activatedRoute: ActivatedRoute, private cardService: CardService) { }
 
   // tslint:disable-next-line:typedef
   handelAllAction(pageNumber) {
@@ -51,6 +58,12 @@ export class ProductsComponent implements OnInit {
         this.products = response.products;
         // @ts-ignore
         this.collectionSize = response.size;
+        if (this.products.length === 0) {
+          this.isCategoryProductExists = true;
+        }else {
+          this.isCategoryProductExists = false;
+        }
+        this.isProductExist = false;
       }
     );
   }
@@ -62,6 +75,12 @@ export class ProductsComponent implements OnInit {
         this.products = response.products;
         // @ts-ignore
         this.collectionSize = response.size;
+        if (this.products.length === 0) {
+          this.isCategoryProductExists = true;
+        }else {
+          this.isCategoryProductExists = false;
+        }
+        this.isProductExist = false;
       }
     );
   }
@@ -75,6 +94,19 @@ export class ProductsComponent implements OnInit {
         this.products = response.products;
         // @ts-ignore
         this.collectionSize = response.size;
+        this.isCategoryProductExists = false;
+        this.isProductExist = false;
+      },
+      errors => {
+        this.products = [];
+        this.collectionSize = 0;
+        // @ts-ignore
+        this.messageAr =  errors.error.bundleMessage.message_ar;
+        // @ts-ignore
+        this.messageEn = errors.error.bundleMessage.message_en;
+
+        this.isCategoryProductExists = false;
+        this.isProductExist = true;
       }
     );
   }
@@ -87,10 +119,28 @@ export class ProductsComponent implements OnInit {
         this.products = response.products;
         // @ts-ignore
         this.collectionSize = response.size;
+        this.isCategoryProductExists = false;
+        this.isProductExist = false;
+      },
+      errors => {
+        this.products = [];
+        this.collectionSize = 0;
+        // @ts-ignore
+        this.messageAr = errors.error.bundleMessage.message_ar;
+        // @ts-ignore
+        this.messageEn = errors.error.bundleMessage.message_en;
+
+        this.isCategoryProductExists = false;
+        this.isProductExist = true;
       }
     );
   }
 
+  // tslint:disable-next-line:typedef
+  addProductToCard(product: Product){
+    const order = new CardOrder(product);
+    this.cardService.addProductOrder(order);
+  }
   // tslint:disable-next-line:typedef
   doPagination(){
     this.handelAllAction(this.pageNumber);
@@ -98,7 +148,7 @@ export class ProductsComponent implements OnInit {
 
   // tslint:disable-next-line:typedef
   changePageSize(event: Event){
-   this.pageSize = +(event.target as HTMLInputElement).value;
-   this.handelAllAction(this.pageNumber);
+    this.pageSize = +(event.target as HTMLInputElement).value;
+    this.handelAllAction(this.pageNumber);
   }
 }

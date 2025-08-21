@@ -26,11 +26,23 @@ public class ExceptionConfig {
     @Autowired
     private BandleTranslatorService bundleTranslatorService;
 
+//    @ExceptionHandler(CustomSystemException.class)
+//    public ResponseEntity<ExceptionResponseVm> handleSystemException(CustomSystemException exception) {
+//        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+//                new ExceptionDto(
+//                        BandleTranslatorService.getBundleMessageInEnglishAndArabic(exception.getMessage())
+//                ));
+//    }
+
     @ExceptionHandler(CustomSystemException.class)
-    public ResponseEntity<ExceptionResponseVm> handleSystemException(CustomSystemException exception) {
-       BundleMessage bundleMessage =  bundleTranslatorService.getBundleMessageInEnglishAndArabic(exception.getMessage());
-        return ResponseEntity.ok(new ExceptionResponseVm(List.of(bundleMessage)));
+    public ResponseEntity<ExceptionDto> handleSystemException(CustomSystemException exception) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                new ExceptionDto(
+                        bundleTranslatorService.getBundleMessageInEnglishAndArabic(exception.getMessage())
+                )
+        );
     }
+
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ExceptionResponseVm> handleValidationExceptions(MethodArgumentNotValidException ex) {
@@ -46,7 +58,7 @@ public class ExceptionConfig {
 
         }
 
-        return ResponseEntity.ok(exceptions);
+        return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(exceptions);
     }
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<ExceptionResponseVm> handleConstraintViolation(ConstraintViolationException ex) {
@@ -60,6 +72,6 @@ public class ExceptionConfig {
             }
         }
 
-        return ResponseEntity.ok(exceptions);
+        return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(exceptions);
     }
 }

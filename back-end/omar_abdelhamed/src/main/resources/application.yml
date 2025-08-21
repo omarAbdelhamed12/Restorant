@@ -18,3 +18,7 @@ spring:
 
 server:
   port: 7070
+
+token:
+  secret: jfiejfekcuiejfrfsfjehfyfyuee54685456eichg@#$%vfnhkdfjuir
+  time: 24h

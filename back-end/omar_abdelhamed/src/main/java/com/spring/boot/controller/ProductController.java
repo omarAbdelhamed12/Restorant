@@ -1,8 +1,16 @@
 package com.spring.boot.controller;
 
 import com.spring.boot.controller.vm.ProductResponseVm;
+import com.spring.boot.dto.ExceptionDto;
 import com.spring.boot.dto.ProductDto;
- import com.spring.boot.service.ProductService;
+import com.spring.boot.exception.CustomSystemException;
+import com.spring.boot.service.ProductService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.transaction.SystemException;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.DecimalMin;
@@ -12,27 +20,52 @@ import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.util.List;
 
+@Tag(
+
+        name = "Product Controller",
+        description = "APIs to create ,insert, delete and update "
+)
 @RestController
 @RequestMapping("/api/product")
-@CrossOrigin("http://localhost:4200")
+//@CrossOrigin("http://localhost:4200")
 @Validated
 public class ProductController {
     @Autowired
     private ProductService productService;
 
+    @Operation(
+            summary = "getAll products API",
+            description = "this API to get all product."
+    )
+    @ApiResponses( value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "HTTP Status get all product "
+            ),
+             @ApiResponse(
+                    responseCode = "500",
+                    description = "HTTP  Internal Server Error ",
+                    content = @Content(
+                            schema = @Schema(implementation = ExceptionDto.class)
+                    )
+            )
+    } )
     @GetMapping("/getAll")
+    @PreAuthorize("hasAnyRole('USER')")
     public ResponseEntity<ProductResponseVm> findAllProductDto(@RequestParam("pageNumber")   int pageNumber,
                                                               @RequestParam("pageSize")      int pageSize) {
         return ResponseEntity.ok(productService.findAllProductDto(pageNumber,pageSize));
     }
 
     @GetMapping("/allProductByCategoryId/{categoryId}")
+    @PreAuthorize("hasAnyRole('USER')")
     public ResponseEntity<ProductResponseVm> allProductByCategoryId(@PathVariable Long categoryId,
                                                                    @RequestParam("pageNumber") int pageNumber,
                                                                    @RequestParam("pageSize")  int pageSize)  {
@@ -72,6 +105,7 @@ public class ProductController {
     }
 
     @GetMapping("/productSearch")
+    @PreAuthorize("hasAnyRole('USER')")
     public ResponseEntity<ProductResponseVm> productSearch(@RequestParam("productSearch") String searchValue ,
                                                            @RequestParam("pageNumber")   int pageNumber,
                                                            @RequestParam("pageSize")      int pageSize)   {
@@ -79,6 +113,7 @@ public class ProductController {
     }
 
     @GetMapping("/categorySearch")
+    @PreAuthorize("hasAnyRole('USER')")
     public ResponseEntity<ProductResponseVm> productSearch(
             @RequestParam("categoryId") Long categoryId,
             @RequestParam("searchValue") String searchValue,

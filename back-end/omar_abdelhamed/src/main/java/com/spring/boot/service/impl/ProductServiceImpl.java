@@ -9,7 +9,9 @@ import com.spring.boot.model.Product;
 import com.spring.boot.modelMapper.ProductMapper;
 import com.spring.boot.repo.CategoryRepo;
 import com.spring.boot.repo.ProductRepo;
+import com.spring.boot.service.CategoryService;
 import com.spring.boot.service.ProductService;
+import jakarta.transaction.SystemException;
 import jakarta.validation.constraints.Max;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -31,7 +33,10 @@ public class ProductServiceImpl  implements ProductService {
     private ProductRepo productRepo;
     @Autowired
     private CategoryRepo categoryRepo;
-   // @Autowired
+
+    @Autowired
+    private CategoryService categoryService;
+    // @Autowired
     //private ProductMapper productMapper;
 
 
@@ -45,6 +50,9 @@ public class ProductServiceImpl  implements ProductService {
         }
         Pageable pageable = PageRequest.of(pageNumber - 1 , pageSize);
        Page<Product> products = productRepo.findAllByOrderByIdAsc(pageable);
+       if (products.getContent().isEmpty()) {
+           throw new CustomSystemException("error.product.notfound");
+       }
 
        return new ProductResponseVm(products.getContent().stream().map(ProductMapper.PRODUCT_MAPPER::toProductDto).toList(),
                products.getTotalElements());
@@ -196,9 +204,15 @@ public class ProductServiceImpl  implements ProductService {
         if (Objects.isNull(pageSize) || pageSize < 1) {
             throw new CustomSystemException("size.of.page");
         }
+
         Pageable pageable = PageRequest.of(pageNumber - 1 , pageSize);
+      //  Page<Product> product = productRepo.
+              //  findByNameContainingIgnoreCaseOrDescriptionContainingIgnoreCaseAndCategoryId(searchValue,searchValue,categoryId,pageable);
         Page<Product> product = productRepo.
-                findByNameContainingIgnoreCaseOrDescriptionContainingIgnoreCaseAndCategoryId(searchValue,searchValue,categoryId,pageable);
+                searchInCategory(categoryId, searchValue, pageable);
+        if (product.getContent().isEmpty()) {
+            throw new CustomSystemException("error.searchValue.found");
+        }
         return new ProductResponseVm(product.getContent().stream().map(ProductMapper.PRODUCT_MAPPER::toProductDto).toList(),
                 product.getTotalElements());
     }

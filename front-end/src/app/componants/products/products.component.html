@@ -4,19 +4,19 @@
           <div class="row g-4">
             <div class="col-lg-6" *ngFor="let pro of products">
               <div class="d-flex align-items-center">
-                <img class="flex-shrink-0 img-fluid rounded" src="../../../assets/img/{{pro.imagePath}}" alt="" style="width: 80px;">
-                <div class="w-100 d-flex flex-column text-start ps-4">
+                <img class="flex-shrink-0 img-fluid rounded " src="../../../assets/img/{{pro.imagePath}}" alt="" style="width: 80px;">
+                <div class="w-200 d-flex flex-column text-start ps-4">
                   <h5 class="d-flex justify-content-between border-bottom pb-2">
                     <span>{{pro.name}}</span>
                     <span class="text-primary">${{pro.price}}</span>
                   </h5>
                   <small class="fst-italic">{{pro.description}}</small>
-                  <button type="button" class="btn btn-danger col-lg-6">ADD to Card</button>
+                  <button type="button" class="btn btn-danger col-lg-6" (click)="addProductToCard(pro)">ADD to Card</button>
                 </div>
               </div>
             </div>
 
-            <div *ngIf="collectionSize === 0 || products.length === 0" class="d-flex justify-content-center align-items-center my-5">
+            <div *ngIf="isCategoryProductExists" class="d-flex justify-content-center align-items-center my-5">
               <div class="card text-center shadow-sm p-4" style="max-width: 500px;">
                 <div class="card-body">
                   <h4 class="card-title mb-3 text-primary">  ! قريباً  </h4>
@@ -26,6 +26,16 @@
                 </div>
               </div>
             </div>
+            <div *ngIf="isProductExist" class="d-flex justify-content-center align-items-center my-5">
+              <div class="card text-center shadow-sm p-4" style="max-width: 500px;">
+                <div class="card-body">
+                  <h5 class="card-title mb-3 text-primary">{{ messageAr }}</h5>
+                  <p class="card-text text-muted">{{ messageEn }}</p>
+                </div>
+              </div>
+            </div>
+
+
 
             <div class="col-md-9 pag" style="padding-left: 30%"  *ngIf="collectionSize !== 0 && products.length !== 0" >
                               <ngb-pagination
@@ -46,7 +56,7 @@
                 <span class="mr-2">Page Size</span>
                 <select (change)="changePageSize($event)">
                   <option>2</option>
-                  <option selected="true">6</option>
+                  <option selected="true">5</option>
                   <option >10</option>
                   <option>20</option>
                   <option>50</option>
