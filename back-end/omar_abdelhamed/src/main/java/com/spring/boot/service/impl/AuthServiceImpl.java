@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 public class AuthServiceImpl implements AuthService {
@@ -39,8 +40,11 @@ public class AuthServiceImpl implements AuthService {
        }
        UserResponseVm userResponseVm = UserMapper.USER_MAPPER.toUserResponseVm(userDto);
        userResponseVm.setToken(tokenHandler.createToken(userDto));
+        userResponseVm.setRoles(getUserRole(userDto));
         return userResponseVm;
     }
+
+
 
     @Override
     public UserResponseVm register(UserDto userDto) {
@@ -48,6 +52,11 @@ public class AuthServiceImpl implements AuthService {
        UserDto createUser   = userService.createUser(userDto);
         UserResponseVm userResponseVm = UserMapper.USER_MAPPER.toUserResponseVm(userDto);
         userResponseVm.setToken(tokenHandler.createToken(createUser));
+        userResponseVm.setRoles(getUserRole(userDto));
         return userResponseVm;
+    }
+
+    private static List<String> getUserRole(UserDto userDto) {
+        return userDto.getRoles().stream().map(roleDto -> roleDto.getCode()).collect(Collectors.toList());
     }
 }

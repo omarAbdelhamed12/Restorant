@@ -2,7 +2,8 @@
 
 import { Injectable } from '@angular/core';
 import {CardOrder} from '../model/card-order';
-import {BehaviorSubject, Subject} from 'rxjs';
+import {BehaviorSubject, Observable, Subject} from 'rxjs';
+import {HttpClient} from '@angular/common/http';
 
 
 @Injectable({
@@ -13,7 +14,6 @@ export class CardService {
   orders: CardOrder[] = [];
   totalPrice: Subject<number> = new BehaviorSubject<number>(0);
   totalOrdersSize: Subject<number> = new BehaviorSubject<number>(0);
-
   constructor() {
   }
 
@@ -51,8 +51,8 @@ export class CardService {
     if (order.quantity === 0) {
       this.remove(order);
     }
+    this.calculateTotalPrice();  // ✅ تحديث بعد النقصان
   }
-
 
   // tslint:disable-next-line:typedef
   remove(order: CardOrder) {
@@ -63,4 +63,10 @@ export class CardService {
     this.calculateTotalPrice();
 
   }
+  // tslint:disable-next-line:typedef
+  clear() {
+    this.orders = [];
+    this.calculateTotalPrice();
+  }
+
 }

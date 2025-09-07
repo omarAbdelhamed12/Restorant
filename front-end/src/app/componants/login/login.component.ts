@@ -26,6 +26,7 @@ export class LoginComponent implements OnInit {
     }
     this.userService.login(userName, password ).subscribe(
       response => {
+        sessionStorage.setItem('roles', JSON.stringify(response.roles));
         sessionStorage.setItem('token', response.token);
         sessionStorage.setItem('userName', response.userName);
         this.router.navigateByUrl('products');

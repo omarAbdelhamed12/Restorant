@@ -1,0 +1,9 @@
+.custom-container {
+  margin: 0 50px; /* مسافة 50px من الجانبين */
+}
+
+@media (max-width: 768px) {
+  .custom-container {
+    margin: 0 15px; /* تقل المسافة على الموبايل */
+  }
+}

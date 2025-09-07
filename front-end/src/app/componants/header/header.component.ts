@@ -25,6 +25,10 @@ constructor(private router: Router, private activatedRoute: ActivatedRoute , pri
   return this.userService.isUserLogin();
   }
   // tslint:disable-next-line:typedef
+  isUserAdmin() {
+    return this.userService.isUserAdmin();
+  }
+  // tslint:disable-next-line:typedef
   logout() {
   this.userService.logout();
   this.router.navigateByUrl(`/login`);

@@ -18,7 +18,7 @@ public class ContactInfoController {
     private ContactInfoService contactInfoService;
 
     @PostMapping("/addContact")
-    @PreAuthorize("hasAnyRole('USER')")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<ContactInfoDto> addContact(@RequestBody @Valid ContactInfoDto contactInfoDto) {
         return ResponseEntity.created(URI.create("/addContact")).body(contactInfoService.savecContactInfo(contactInfoDto));
 

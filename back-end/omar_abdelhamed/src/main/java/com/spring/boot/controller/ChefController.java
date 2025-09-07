@@ -21,7 +21,7 @@ public class ChefController {
     private ChefService chefService;
 
     @GetMapping("/getAllChef")
-    @PreAuthorize("hasAnyRole('USER')")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<List<ChefDto>> getAllChefs() {
         return ResponseEntity.ok(chefService.getALLChefs());
     }

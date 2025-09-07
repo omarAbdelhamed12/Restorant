@@ -1,250 +1,132 @@
 <section class="ftco-section">
   <div class="container">
+    <!-- Title -->
     <div class="row justify-content-center">
       <div class="col-md-6 text-center mb-4">
         <h1 class="heading-section">Orders</h1>
       </div>
     </div>
-    <div class="row" *ngIf="orders.length != 0">
+
+    <!-- Orders Table -->
+    <div class="row" *ngIf="orders.length != 0 && !orderSubmitted">
       <div class="col-md-12">
-        <!--					<h3 class="h5 mb-4 text-center">Table Accordion</h3>-->
-        <div class="table-wrap">
-          <table class="table">
-            <thead class="thead-primary">
+        <div class="table-wrap shadow-sm rounded bg-white p-3">
+          <table class="table table-hover align-middle text-center">
+            <thead class="table-success">
             <tr>
-              <th>&nbsp;</th>
-              <th>&nbsp;</th>
+              <th>Image</th>
               <th>Product</th>
               <th>Price</th>
               <th>ADD</th>
               <th>Quantity</th>
               <th>REMOVE</th>
-              <th>total</th>
+              <th>Total</th>
               <th>&nbsp;</th>
             </tr>
             </thead>
             <tbody>
-            <tr class="alert" role="alert" *ngFor="let order of orders">
-              <td >
-                <label class="checkbox-wrap checkbox-primary">
-                </label>
-              </td>
+            <tr *ngFor="let order of orders">
               <td class="image_style">
-                <img class="img image_style" src="assets/img/{{order.imagePath}}" />
+                <img class="img img-thumbnail" src="assets/img/{{order.imagePath}}" />
               </td>
               <td>
-                <div class="email">
-                  <div>{{order.name}} </div>
-                  <div>{{ order.description }}</div>
-                </div>
+                <div><strong>{{order.name}}</strong></div>
+                <small class="text-muted">{{ order.description }}</small>
               </td>
-              <td>${{ order.price }}</td>
-              <td class="quantity">
-                <div class="input-group">
-                  <a (click)="addOrder(order)">
-                    <i class="fa fa-plus"></i>
-                  </a>
-                </div>
-              </td>
-              <td class="quantity">
-                <div class="input-group">
-                  <input disabled type="text" name="quantity" class="quantity form-control input-number" value="{{order.quantity}}" min="1" max="100">
-                </div>
-              </td>
-              <td class="quantity">
-                <div class="input-group">
-                  <a (click)="decreaseOrder(order)">
-                    <i class="fa fa-minus"></i>
-                  </a>
-                </div>
-              </td>
-              <td>${{ order.quantity * order.price }}</td>
+              <td><span class="fw-bold fs-5">{{ order.quantity * order.price }}</span>
+                <small class="text-muted">EGP</small></td>
               <td>
-                <button type="button" class="close"  aria-label="Close" (click)="remove(order)">
-                  X
+                <a class="btn btn-sm btn-outline-success" (click)="addOrder(order)">
+                  <i class="fa fa-plus"></i>
+                </a>
+              </td>
+              <td>
+                <input
+                  disabled
+                  type="text"
+                  class="form-control text-center d-inline-block"
+                  value="{{order.quantity}}"
+                  style="width: auto; min-width: 40px; max-width: 60px; padding: 2px 6px; text-align: center;">
+              </td>
+
+              <td>
+                <a class="btn btn-sm btn-outline-warning" (click)="decreaseOrder(order)">
+                  <i class="fa fa-minus"></i>
+                </a>
+              </td>
+              <td>
+                <span class="fw-bold fs-5">{{ order.quantity * order.price }}</span>
+                <small class="text-muted">EGP</small>
+              </td>
+
+              <td>
+                <button type="button" class="btn btn-sm btn-danger" (click)="remove(order)">
+                  <i class="fa fa-trash"></i>
                 </button>
               </td>
             </tr>
-<!--            <tr class="alert" role="alert">-->
-<!--              <td>-->
-<!--                <label class="checkbox-wrap checkbox-primary">-->
-<!--                </label>-->
-<!--              </td>-->
-<!--              <td>-->
-<!--                <img class="img" src="assets/img/menu-5.jpg" />-->
-<!--              </td>-->
-<!--              <td>-->
-<!--                <div class="email">-->
-<!--                  <span>Sneakers Shoes 2020 For Men </span>-->
-<!--                  <span>Fugiat voluptates quasi nemo, ipsa perferendis</span>-->
-<!--                </div>-->
-<!--              </td>-->
-<!--              <td>$44.99</td>-->
-<!--              <td class="quantity">-->
-<!--                <div class="input-group">-->
-<!--                  <a href="#">-->
-<!--                    <i class="fa fa-plus"></i>-->
-<!--                  </a>-->
-<!--                </div>-->
-<!--              </td>-->
-<!--              <td class="quantity">-->
-<!--                <div class="input-group">-->
-<!--                  <input disabled type="text" name="quantity" class="quantity form-control input-number" value="2" min="1" max="100">-->
-<!--                </div>-->
-<!--              </td>-->
-<!--              <td class="quantity">-->
-<!--                <div class="input-group">-->
-<!--                  <a href="#">-->
-<!--                    <i class="fa fa-minus"></i>-->
-<!--                  </a>-->
-<!--                </div>-->
-<!--              </td>-->
-<!--              <td>$89.98</td>-->
-<!--              <td>-->
-<!--                <button type="button" class="close"  aria-label="Close">-->
-<!--                  X-->
-<!--                </button>-->
-<!--              </td>-->
-<!--            </tr>-->
-<!--            <tr class="alert" role="alert">-->
-<!--              <td>-->
-<!--                <label class="checkbox-wrap checkbox-primary">-->
-<!--                </label>-->
-<!--              </td>-->
-<!--              <td>-->
-<!--                <img class="img" src="assets/img/menu-5.jpg" />-->
-<!--              </td>-->
-<!--              <td>-->
-<!--                <div class="email">-->
-<!--                  <span>Sneakers Shoes 2020 For Men </span>-->
-<!--                  <span>Fugiat voluptates quasi nemo, ipsa perferendis</span>-->
-<!--                </div>-->
-<!--              </td>-->
-<!--              <td>$44.99</td>-->
-<!--              <td class="quantity">-->
-<!--                <div class="input-group">-->
-<!--                  <a href="#">-->
-<!--                    <i class="fa fa-plus"></i>-->
-<!--                  </a>-->
-<!--                </div>-->
-<!--              </td>-->
-<!--              <td class="quantity">-->
-<!--                <div class="input-group">-->
-<!--                  <input disabled type="text" name="quantity" class="quantity form-control input-number" value="2" min="1" max="100">-->
-<!--                </div>-->
-<!--              </td>-->
-<!--              <td class="quantity">-->
-<!--                <div class="input-group">-->
-<!--                  <a href="#">-->
-<!--                    <i class="fa fa-minus"></i>-->
-<!--                  </a>-->
-<!--                </div>-->
-<!--              </td>-->
-<!--              <td>$89.98</td>-->
-<!--              <td>-->
-<!--                <button type="button" class="close"  aria-label="Close">-->
-<!--                  X-->
-<!--                </button>-->
-<!--              </td>-->
-<!--            </tr>-->
-<!--            <tr class="alert" role="alert">-->
-<!--              <td>-->
-<!--                <label class="checkbox-wrap checkbox-primary">-->
-<!--                </label>-->
-<!--              </td>-->
-<!--              <td>-->
-<!--                <img class="img" src="assets/img/menu-5.jpg" />-->
-<!--              </td>-->
-<!--              <td>-->
-<!--                <div class="email">-->
-<!--                  <span>Sneakers Shoes 2020 For Men </span>-->
-<!--                  <span>Fugiat voluptates quasi nemo, ipsa perferendis</span>-->
-<!--                </div>-->
-<!--              </td>-->
-<!--              <td>$44.99</td>-->
-<!--              <td class="quantity">-->
-<!--                <div class="input-group">-->
-<!--                  <a href="#">-->
-<!--                    <i class="fa fa-plus"></i>-->
-<!--                  </a>-->
-<!--                </div>-->
-<!--              </td>-->
-<!--              <td class="quantity">-->
-<!--                <div class="input-group">-->
-<!--                  <input disabled type="text" name="quantity" class="quantity form-control input-number" value="2" min="1" max="100">-->
-<!--                </div>-->
-<!--              </td>-->
-<!--              <td class="quantity">-->
-<!--                <div class="input-group">-->
-<!--                  <a href="#">-->
-<!--                    <i class="fa fa-minus"></i>-->
-<!--                  </a>-->
-<!--                </div>-->
-<!--              </td>-->
-<!--              <td>$89.98</td>-->
-<!--              <td>-->
-<!--                <button type="button" class="close"  aria-label="Close">-->
-<!--                  X-->
-<!--                </button>-->
-<!--              </td>-->
-<!--            </tr>-->
-<!--            <tr class="alert" role="alert">-->
-<!--              <td>-->
-<!--                <label class="checkbox-wrap checkbox-primary">-->
-<!--                </label>-->
-<!--              </td>-->
-<!--              <td>-->
-<!--                <img class="img" src="assets/img/menu-5.jpg" />-->
-<!--              </td>-->
-<!--              <td>-->
-<!--                <div class="email">-->
-<!--                  <span>Sneakers Shoes 2020 For Men </span>-->
-<!--                  <span>Fugiat voluptates quasi nemo, ipsa perferendis</span>-->
-<!--                </div>-->
-<!--              </td>-->
-<!--              <td>$44.99</td>-->
-<!--              <td class="quantity">-->
-<!--                <div class="input-group">-->
-<!--                  <a href="#">-->
-<!--                    <i class="fa fa-plus"></i>-->
-<!--                  </a>-->
-<!--                </div>-->
-<!--              </td>-->
-<!--              <td class="quantity">-->
-<!--                <div class="input-group">-->
-<!--                  <input disabled type="text" name="quantity" class="quantity form-control input-number" value="2" min="1" max="100">-->
-<!--                </div>-->
-<!--              </td>-->
-<!--              <td class="quantity">-->
-<!--                <div class="input-group">-->
-<!--                  <a href="#">-->
-<!--                    <i class="fa fa-minus"></i>-->
-<!--                  </a>-->
-<!--                </div>-->
-<!--              </td>-->
-<!--              <td>$89.98</td>-->
-<!--              <td>-->
-<!--                <button type="button" class="close"  aria-label="Close">-->
-<!--                  X-->
-<!--                </button>-->
-<!--              </td>-->
-<!--            </tr>-->
             </tbody>
           </table>
-          <button type="button" class="btn btn-success col-12">Take Order</button>
+
+          <!-- Confirm Order Button -->
+          <div class="text-center mt-4">
+            <button type="button"
+                    class="btn-order-nav"
+                    (click)="takeOrder()">
+              <i class="fas fa-shopping-cart"></i> Take Order
+            </button>
+          </div>
+
+
         </div>
       </div>
     </div>
 
-    <div class="row" *ngIf="orders.length === 0" class="d-flex justify-content-center align-items-center my-5">
-        <div class="card text-center shadow-sm p-4" style="max-width: 500px;">
-          <div class="card-body">
-            <h4 class="card-title mb-3 text-primary">  No Order Found Now !  </h4>
-<!--            <p class="card-text fs-5"> . ترقبوا ! شيء مذهل قريبا </p>-->
-            <hr>
-            <p class="card-text text-muted"> ! لا يوجد اى طلب   </p>
+    <!-- Receipt After Order -->
+    <div class="row justify-content-center" *ngIf="orderSubmitted">
+      <div class="col-md-8">
+        <div class="receipt-card shadow-lg p-5 rounded bg-light text-center">
+
+          <!-- ✅ Success Icon -->
+          <div class="mb-4">
+            <i class="fas fa-check-circle text-success fa-5x mb-3"></i>
+            <h2 class="fw-bold text-dark">Your Order is Confirmed </h2>
+            <p class="text-muted fs-5">Thank you for your purchase! Below are your order details:</p>
           </div>
+
+          <!-- ✅ Order Info -->
+          <div class="receipt-info text-start bg-white p-4 rounded shadow-sm mb-4">
+            <p class="mb-2"><strong> Order Code:  </strong>
+              <span class="text-primary">{{ receipt.code }}</span>
+            </p>
+            <p class="mb-2"><strong> Total Price:  </strong>
+              <span class="text-danger">{{ receipt.totalPrice }} EGP</span>
+            </p>
+            <p class="mb-0"><strong> Number of Products:  </strong> {{ receipt.totalNumber }}</p>
+          </div>
+
+
+          <!-- ✅ OK Button -->
+          <div class="text-center mt-4">
+            <button class="btn-order-nav" (click)="goHome()">
+              OK
+            </button>
+          </div>
+
         </div>
+      </div>
+    </div>
+
+
+    <!-- No Orders -->
+    <div class="row d-flex justify-content-center align-items-center my-5" *ngIf="orders.length === 0 && !orderSubmitted">
+      <div class="card text-center shadow-sm p-4" style="max-width: 500px;">
+        <div class="card-body">
+          <h4 class="card-title mb-3 text-primary">No Order Found Now !</h4>
+          <hr>
+          <p class="card-text text-muted">! لا يوجد أي طلب</p>
+        </div>
+      </div>
     </div>
   </div>
 </section>

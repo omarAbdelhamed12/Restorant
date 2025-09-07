@@ -58,20 +58,21 @@ public class ProductController {
             )
     } )
     @GetMapping("/getAll")
-    @PreAuthorize("hasAnyRole('USER')")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<ProductResponseVm> findAllProductDto(@RequestParam("pageNumber")   int pageNumber,
                                                               @RequestParam("pageSize")      int pageSize) {
         return ResponseEntity.ok(productService.findAllProductDto(pageNumber,pageSize));
     }
 
     @GetMapping("/allProductByCategoryId/{categoryId}")
-    @PreAuthorize("hasAnyRole('USER')")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<ProductResponseVm> allProductByCategoryId(@PathVariable Long categoryId,
                                                                    @RequestParam("pageNumber") int pageNumber,
                                                                    @RequestParam("pageSize")  int pageSize)  {
         return ResponseEntity.ok(productService.getProductsByCategoryId(categoryId,pageNumber,pageSize));
     }
     @PostMapping("/creatProduct")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<ProductDto> createProduct(@RequestBody @Valid ProductDto productDto)   {
         return ResponseEntity.created(URI.create("/creatProduct")).body(productService.createProduct(productDto));
     }
@@ -80,6 +81,7 @@ public class ProductController {
         return ResponseEntity.created(URI.create("/saveListOfProducts")).body(productService.saveListOfProduct(productDtoList));
     }
     @PutMapping("/updateProduct")
+    @PreAuthorize("hasAnyRole(  'ADMIN')")
     public ResponseEntity<ProductDto> updateProduct(@RequestBody @Valid ProductDto productDto)   {
         return ResponseEntity.ok(productService.updateProduct(productDto));
     }
@@ -88,6 +90,7 @@ public class ProductController {
         return ResponseEntity.ok(productService.updateListOfProduct(productDtoList));
     }
     @DeleteMapping("/deleteProduct")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<Void> deleteProduct(@RequestParam("id") Long id) throws SystemException {
        return productService.deleteProductById(id) ?
                ResponseEntity.noContent().build() :
@@ -105,7 +108,7 @@ public class ProductController {
     }
 
     @GetMapping("/productSearch")
-    @PreAuthorize("hasAnyRole('USER')")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<ProductResponseVm> productSearch(@RequestParam("productSearch") String searchValue ,
                                                            @RequestParam("pageNumber")   int pageNumber,
                                                            @RequestParam("pageSize")      int pageSize)   {
@@ -113,7 +116,7 @@ public class ProductController {
     }
 
     @GetMapping("/categorySearch")
-    @PreAuthorize("hasAnyRole('USER')")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<ProductResponseVm> productSearch(
             @RequestParam("categoryId") Long categoryId,
             @RequestParam("searchValue") String searchValue,

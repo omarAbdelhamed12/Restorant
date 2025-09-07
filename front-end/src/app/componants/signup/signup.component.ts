@@ -32,9 +32,10 @@ export class SignupComponent implements OnInit {
     }
     this.userService.creatUser(userName, password, address, age, phoneNumber).subscribe(
       response => {
-         sessionStorage.setItem('token', response.token);
-         sessionStorage.setItem('userName', response.userName);
-         this.router.navigateByUrl('products');
+        sessionStorage.setItem('roles', JSON.stringify(response.roles));
+        sessionStorage.setItem('token', response.token);
+        sessionStorage.setItem('userName', response.userName);
+        this.router.navigateByUrl('products');
       }, errors => {
         this.messageAr = errors.error.errorMessages[0].message_ar;
         this.messageEn = errors.error.errorMessages[0].message_en;

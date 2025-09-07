@@ -49,6 +49,19 @@ export class ProductService {
       )
     );
   }
+  updateProduct(product: Product): Observable<any> {
+    return this.http.put<Product>(`${this.baseUrl}/updateProduct`, product).pipe(
+      map(
+        response => response
+      )
+    );
+  }
+  deleteProduct(id: number): Observable<any> {
+    return this.http.delete<any>(`${this.baseUrl}/deleteProduct?id=${id}`).pipe(
+      map(response => response)
+    );
+  }
+
 
 
 }

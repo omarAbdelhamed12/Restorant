@@ -19,5 +19,6 @@ public interface UserMapper {
     User toUser(UserDto userDto);
     List<User> toUserList(List<UserDto> userDtos);
     List<UserDto> toUserDtoList(List<User> users);
+
     UserResponseVm toUserResponseVm(UserDto userDto);
 }

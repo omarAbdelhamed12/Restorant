@@ -35,7 +35,7 @@ public class CategoryController {
             description = "this API to get all Category."
     )
     @GetMapping("/getAll")
-    @PreAuthorize("hasAnyRole('USER')")
+    @PreAuthorize("hasAnyRole('USER' , 'ADMIN')")
     public ResponseEntity<List<CategoryDto>> findAllCategoryDto() {
         return ResponseEntity.ok(categoryService.findAllCategoryDto());
 

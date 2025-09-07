@@ -20,8 +20,8 @@ public class OrderController {
     private OrderService orderService;
 
     @PostMapping("/request")
-    @PreAuthorize("hasAnyRole('USER')")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<OrderResponseVm> requestOrder(@RequestBody @Valid OrderRequestVm orderRequestVm) {
-        return ResponseEntity.created(URI.create("order/request")).body(orderService.requestOrder(orderRequestVm));
+        return ResponseEntity.created(URI.create("/order/")).body(orderService.requestOrder(orderRequestVm));
     }
 }

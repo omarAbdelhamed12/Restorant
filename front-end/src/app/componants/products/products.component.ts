@@ -4,11 +4,21 @@ import {Product} from '../../../model/product';
 import {ActivatedRoute} from '@angular/router';
 import {CardService} from '../../../service/card.service';
 import {CardOrder} from '../../../model/card-order';
+import {UserService} from '../../../service/security/user.service';
+import { trigger, style, animate, transition } from '@angular/animations';
 
 @Component({
   selector: 'app-products',
   templateUrl: './products.component.html',
-  styleUrls: ['./products.component.css']
+  styleUrls: ['./products.component.css'],
+  animations: [
+    trigger('fadeIn', [
+      transition(':enter', [
+        style({ opacity: 0, transform: 'translateY(20px)' }),
+        animate('500ms ease-out', style({ opacity: 1, transform: 'translateY(0)' }))
+      ])
+    ])
+  ]
 })
 export class ProductsComponent implements OnInit {
   products: Product[] = [];
@@ -20,20 +30,24 @@ export class ProductsComponent implements OnInit {
 
   isCategoryProductExists = false;
   isProductExist = false;
+
+  editingProductId: number | null = null;   // المنتج اللي في وضع التعديل
+  editedProduct: Product = {} as Product;   // نسخة من المنتج اللي بيتعدل
+
   ngOnInit(): void {
     this.activatedRoute.paramMap.subscribe(( ) => this.handelAllAction(this.pageNumber));
 
   }
-  constructor(private  productService: ProductService, private activatedRoute: ActivatedRoute, private cardService: CardService) { }
+  constructor(private  productService: ProductService, private activatedRoute: ActivatedRoute,
+              private cardService: CardService , private userService: UserService ) { }
 
   // tslint:disable-next-line:typedef
   handelAllAction(pageNumber) {
     const idCategoryExist = this.activatedRoute.snapshot.paramMap.has('id');
     const keyCategoryExist = this.activatedRoute.snapshot.paramMap.has('key');
-
-    if (idCategoryExist && keyCategoryExist) {
+    const key  = this.activatedRoute.snapshot.paramMap.get('key');
+    if (idCategoryExist && keyCategoryExist && key && key !== '' ) {
       const idCategory  = this.activatedRoute.snapshot.paramMap.get('id');
-      const key  = this.activatedRoute.snapshot.paramMap.get('key');
       this.searchByCategoryIdAndKey(idCategory , key , pageNumber);
       return;
 }
@@ -42,8 +56,11 @@ export class ProductsComponent implements OnInit {
       const idCategory  = this.activatedRoute.snapshot.paramMap.get('id');
       this.getProductsByCategoryId(idCategory, pageNumber  );
     }else if (keyCategoryExist){
+      // tslint:disable-next-line:no-shadowed-variable
       const key  = this.activatedRoute.snapshot.paramMap.get('key');
-      this.getProductsByName(key, pageNumber);
+      if (key && key !== '' ) {
+        this.getProductsByName(key, pageNumber);
+      }
     }else {
       this.getAllProducts(pageNumber);
     }
@@ -135,6 +152,60 @@ export class ProductsComponent implements OnInit {
       }
     );
   }
+  // tslint:disable-next-line:typedef
+  saveEdit() {
+    this.productService.updateProduct(this.editedProduct).subscribe({
+      next: (res) => {
+        console.log('Updated:', res);
+        const index = this.products.findIndex(p => p.id === this.editedProduct.id);
+        if (index !== -1) {
+          this.products[index] = { ...this.editedProduct };
+        }
+
+        this.editingProductId = null;
+        this.isProductExist = false;
+      },
+      error: (err) => {
+        console.error('Error updating:', err);
+
+        if (err.error && err.error.errorMessages && err.error.errorMessages.length > 0) {
+          this.messageAr = err.error.errorMessages[0].message_ar;
+          this.messageEn = err.error.errorMessages[0].message_en;
+        }
+
+        this.isProductExist = true;
+        setTimeout(() => {
+          this.isProductExist = false;
+        }, 3000);
+      }
+    });
+  }
+
+
+
+  // tslint:disable-next-line:typedef
+  cancelEdit() {
+    this.editingProductId = null;
+  }
+  // tslint:disable-next-line:typedef
+  startEdit(product: Product) {
+    this.editingProductId = product.id;
+    this.editedProduct = { ...product };
+  }
+  // tslint:disable-next-line:typedef
+  deleteProduct(id: number) {
+    this.productService.deleteProduct(id).subscribe({
+      next: (res) => {
+        console.log('Deleted:', res);
+        this.getAllProducts(this.pageNumber); // تحديث المنتجات
+      },
+      error: (err) => {
+        console.error('Error deleting product:', err);
+      }
+    });
+  }
+
+
 
   // tslint:disable-next-line:typedef
   addProductToCard(product: Product){
@@ -151,4 +222,9 @@ export class ProductsComponent implements OnInit {
     this.pageSize = +(event.target as HTMLInputElement).value;
     this.handelAllAction(this.pageNumber);
   }
+  // tslint:disable-next-line:typedef
+  isUserAdmin() {
+    return this.userService.isUserAdmin();
+  }
+
 }

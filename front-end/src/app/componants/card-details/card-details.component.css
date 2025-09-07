@@ -1,3 +1,95 @@
-.image_style{
+.image_style {
   width: 200px !important;
+  height: 200px !important;
+
+}
+
+
+
+.table-wrap {
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+}
+
+.receipt-card {
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e0e0e0;
+}
+
+.receipt-info p {
+  margin: 0.5rem 0;
+  padding: 8px;
+  border-bottom: 1px dashed #eee;
+}
+.receipt-card {
+  border-radius: 15px;
+  background: linear-gradient(135deg, #f9f9f9, #fdfdfd);
+}
+
+.receipt-info {
+  font-size: 1.1rem;
+}
+
+.table th {
+  font-size: 1rem;
+}
+
+.table td {
+  font-size: 0.95rem;
+}
+
+
+
+.btn-order-nav {
+  position: relative;
+  display: inline-block;
+  padding: 12px 35px;
+  font-size: 18px;
+  font-weight: bold;
+  color: #ffc107; /* نفس لون active link */
+  background: #212529; /* نفس bg-dark بتاع النافبار */
+  border: 2px solid #ffc107;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.4s ease;
+  text-transform: uppercase;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+.btn-order-nav:hover {
+  background: #ffc107;
+  color: #212529;
+  transform: scale(1.05);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+}
+
+.btn-order-nav i {
+  margin-right: 8px;
+  transition: transform 0.3s ease;
+}
+
+.btn-order-nav:hover i {
+  transform: rotate(20deg) scale(1.2);
+}
+
+/* Ripple Effect */
+.btn-order-nav::after {
+  content: "";
+  position: absolute;
+  width: 300%;
+  height: 300%;
+  left: 50%;
+  top: 50%;
+  background: rgba(255, 193, 7, 0.2);
+  transform: translate(-50%, -50%) scale(0);
+  border-radius: 50%;
+  transition: transform 0.6s ease;
+}
+
+.btn-order-nav:active::after {
+  transform: translate(-50%, -50%) scale(1);
+  transition: 0s;
 }

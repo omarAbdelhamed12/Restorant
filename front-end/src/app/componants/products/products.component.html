@@ -1,69 +1,129 @@
+<div class="container-fluid px-0 py-4">
 
-      <div class="tab-content">
-        <div id="tab-1" class="tab-pane fade show p-0 active">
-          <div class="row g-4">
-            <div class="col-lg-6" *ngFor="let pro of products">
-              <div class="d-flex align-items-center">
-                <img class="flex-shrink-0 img-fluid rounded " src="../../../assets/img/{{pro.imagePath}}" alt="" style="width: 80px;">
-                <div class="w-200 d-flex flex-column text-start ps-4">
-                  <h5 class="d-flex justify-content-between border-bottom pb-2">
-                    <span>{{pro.name}}</span>
-                    <span class="text-primary">${{pro.price}}</span>
-                  </h5>
-                  <small class="fst-italic">{{pro.description}}</small>
-                  <button type="button" class="btn btn-danger col-lg-6" (click)="addProductToCard(pro)">ADD to Card</button>
+
+
+  <div id="tab-1" class="tab-pane fade show p-0 active">
+    <div class="row g-4">
+
+      <!-- Loop على المنتجات -->
+      <div class="col-lg-6" *ngFor="let pro of products">
+        <div class="d-flex align-items-center">
+          <img class="flex-shrink-0 img-fluid rounded"
+               src="../../../assets/img/{{pro.imagePath}}"
+               alt=""
+               style="width: 100px ; height: 100px;">
+
+          <div class="w-200 d-flex flex-column text-start ps-4">
+
+            <div *ngIf="editingProductId === pro.id; else viewMode">
+              <div class="edit-product-form d-flex flex-column p-3"
+                   style="width: 400px; height: 400px; background: #f8f9fa; border: 1px solid #ddd; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+
+                <h5 class="text-primary text-center mb-3" style="font-weight: 600;">✏️ Edit Product</h5>
+
+                <input type="text" [(ngModel)]="editedProduct.name"
+                       class="form-control mb-2"
+                       placeholder="Enter product name"
+                       style="border-radius: 8px; padding: 0.5rem;">
+
+                <input type="number" [(ngModel)]="editedProduct.price"
+                       class="form-control mb-2"
+                       placeholder="Enter price"
+                       style="border-radius: 8px; padding: 0.5rem;">
+
+                <textarea [(ngModel)]="editedProduct.description"
+                          class="form-control mb-3 flex-grow-1"
+                          placeholder="Enter product description"
+                          style="border-radius: 8px; padding: 0.5rem; resize: vertical; max-height: 180px;"></textarea>
+
+                <div class="mt-auto d-flex justify-content-between gap-2">
+                  <button class="btn btn-success flex-fill" (click)="saveEdit()" style="border-radius: 8px;">Save</button>
+                  <button class="btn btn-secondary flex-fill" (click)="cancelEdit()" style="border-radius: 8px;">Cancel</button>
+                </div>
+
+                <div *ngIf="isProductExist" class="alert alert-danger mt-2 p-2 text-center" role="alert">
+                  <h6 class="fw-bold mb-1">{{ messageAr }}</h6>
+                  <small>{{ messageEn }}</small>
+                </div>
+
+              </div>
+            </div>
+
+            <!-- العرض العادي -->
+            <ng-template #viewMode>
+              <h5 class="d-flex justify-content-between border-bottom pb-2">
+                <span>{{pro.name}}</span>
+                <span class="text-primary">{{pro.price}} EGP</span>
+              </h5>
+              <small class="fst-italic">{{pro.description}}</small>
+
+              <div class="d-flex align-items-center mt-2 gap-2">
+                <!-- Add to Cart -->
+                <button type="button" class="btn btn-danger d-flex align-items-center rounded-pill shadow-sm px-3"
+                        (click)="addProductToCard(pro)">
+                  <i class="fas fa-cart-plus me-2"></i> ADD to Card
+                </button>
+
+                <!-- Admin Actions -->
+                <div *ngIf="isUserAdmin()">
+                  <button type="button" class="btn btn-warning btn-sm" (click)="startEdit(pro)">
+                    <i class="fas fa-edit"></i>
+                  </button>
+                  <button type="button" class="btn btn-danger btn-sm" (click)="deleteProduct(pro.id)">
+                    <i class="fas fa-trash"></i>
+                  </button>
                 </div>
               </div>
-            </div>
-
-            <div *ngIf="isCategoryProductExists" class="d-flex justify-content-center align-items-center my-5">
-              <div class="card text-center shadow-sm p-4" style="max-width: 500px;">
-                <div class="card-body">
-                  <h4 class="card-title mb-3 text-primary">  ! قريباً  </h4>
-                  <p class="card-text fs-5"> . ترقبوا ! شيء مذهل قريبا </p>
-                  <hr>
-                  <p class="card-text text-muted">Stay tuned! Something amazing is coming soon.</p>
-                </div>
-              </div>
-            </div>
-            <div *ngIf="isProductExist" class="d-flex justify-content-center align-items-center my-5">
-              <div class="card text-center shadow-sm p-4" style="max-width: 500px;">
-                <div class="card-body">
-                  <h5 class="card-title mb-3 text-primary">{{ messageAr }}</h5>
-                  <p class="card-text text-muted">{{ messageEn }}</p>
-                </div>
-              </div>
-            </div>
-
-
-
-            <div class="col-md-9 pag" style="padding-left: 30%"  *ngIf="collectionSize !== 0 && products.length !== 0" >
-                              <ngb-pagination
-                                [(page)]="pageNumber"
-                                [pageSize]= "pageSize"
-                                [collectionSize]= "collectionSize"
-                                [maxSize]="5"
-                                (pageChange)="doPagination()"
-                                [boundaryLinks]="true"
-                              >
-                              </ngb-pagination>
-
-<!--              (pageChange)="doing()"-->
-<!--              [maxSize]="5"-->
-<!--              [boundaryLinks]="true"-->
-
-              <div class="sel">
-                <span class="mr-2">Page Size</span>
-                <select (change)="changePageSize($event)">
-                  <option>2</option>
-                  <option selected="true">5</option>
-                  <option >10</option>
-                  <option>20</option>
-                  <option>50</option>
-                </select>
-              </div>
-            </div>
+            </ng-template>
           </div>
         </div>
       </div>
 
+      <!-- حالة عدم وجود منتجات -->
+      <div *ngIf="isCategoryProductExists" class="d-flex justify-content-center align-items-center my-5">
+        <div class="card text-center shadow-sm p-4" style="max-width: 500px;">
+          <div class="card-body">
+            <h4 class="card-title mb-3 text-primary">! قريباً</h4>
+            <p class="card-text fs-5">. ترقبوا ! شيء مذهل قريبا</p>
+            <hr>
+            <p class="card-text text-muted">Stay tuned! Something amazing is coming soon.</p>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="isProductExist" class="d-flex justify-content-center align-items-center my-5">
+        <div class="card text-center shadow-sm p-4" style="max-width: 500px;">
+          <div class="card-body">
+            <h5 class="card-title mb-3 text-primary">{{ messageAr }}</h5>
+            <p class="card-text text-muted">{{ messageEn }}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pagination -->
+      <div class="col-md-9 pag" style="padding-left: 30%"
+           *ngIf="collectionSize !== 0 && products.length !== 0">
+        <ngb-pagination
+          [(page)]="pageNumber"
+          [pageSize]= "pageSize"
+          [collectionSize]= "collectionSize"
+          [maxSize]="5"
+          (pageChange)="doPagination()"
+          [boundaryLinks]="true">
+        </ngb-pagination>
+
+        <div class="sel mt-3">
+          <span class="mr-2">Page Size</span>
+          <select (change)="changePageSize($event)">
+            <option>2</option>
+            <option selected="true">5</option>
+            <option>10</option>
+            <option>20</option>
+            <option>50</option>
+          </select>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
