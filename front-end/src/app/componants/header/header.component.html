@@ -11,7 +11,11 @@
     <div class="collapse navbar-collapse" id="navbarCollapse">
       <input *ngIf="isUserLogin()" class="form-control" type="search" placeholder="Search" aria-label="Search" #key (input)="search(key.value)">
       <div class="navbar-nav ms-auto py-0 pe-4">
-        <div *ngIf="isUserLogin()" class="nav-item nav-link active"><a routerLink="/contact-info">Contact</a></div>
+        <div *ngIf="isUserLogin()" class="nav-item nav-link active"><a routerLink="/products">Home</a></div>
+
+        <div class="navbar-nav ms-auto py-0 pe-4">
+          <div *ngIf="isUserLogin()" class="nav-item nav-link active"><a routerLink="/contact-info">Contact</a></div>
+
         <div class="nav-item nav-link active"> </div>
         <div *ngIf="isUserLogin()" class="nav-item nav-link active"><a routerLink="/chefs">Team</a></div>
         <div class="nav-item nav-link active"> </div>
@@ -20,14 +24,15 @@
         <div *ngIf="isUserLogin()" class="nav-item dropdown">
           <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Actions</a>
           <div class="dropdown-menu m-0">
-            <a href="booking.html" class="dropdown-item">Request Orders</a>
+            <a href="booking.html" class="dropdown-item" routerLink = "/requestLogin">Request Orders</a>
             <div *ngIf="isUserAdmin()">
-              <a href="team.html" class="dropdown-item">All Request Orders</a>
+              <a href="team.html" class="dropdown-item" routerLink = "/requestAllOrder">All Request Orders</a>
               <a href="testimonial.html" class="dropdown-item">Add Product</a>
             </div>
           </div>
         </div>
       </div>
+    </div>
     </div>
     <app-card *ngIf="isUserLogin()"></app-card>
     <div *ngIf="isUserLogin()" class="nav-item nav-link active"><a (click)="logout()" routerLink>logout</a></div>

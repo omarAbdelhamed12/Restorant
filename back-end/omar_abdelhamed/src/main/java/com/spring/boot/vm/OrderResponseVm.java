@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+ import java.util.List;
+
 
 @Getter
 @Setter
@@ -15,6 +17,9 @@ public class OrderResponseVm {
     private String code;
      private double totalPrice;
      private double totalNumber;
+    private List<String> productNames;
+    private List<String> imagePath;
+    private List<Float> price;
 
 
 }

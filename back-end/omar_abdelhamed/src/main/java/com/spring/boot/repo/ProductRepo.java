@@ -28,4 +28,5 @@ public interface ProductRepo  extends JpaRepository<Product, Long> {
     Page<Product> findAllByOrderByIdAsc(Pageable pageable);
 
     List<Product> findByIdIn(List<Long> ids);
+    Optional<Product> findById(Long id);
 }

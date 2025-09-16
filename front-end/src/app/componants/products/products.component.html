@@ -66,12 +66,18 @@
 
                 <!-- Admin Actions -->
                 <div *ngIf="isUserAdmin()">
-                  <button type="button" class="btn btn-warning btn-sm" (click)="startEdit(pro)">
+                  <button type="button" class="btn btn-warning btn-sm ms-2" (click)="startEdit(pro)">
                     <i class="fas fa-edit"></i>
                   </button>
-                  <button type="button" class="btn btn-danger btn-sm" (click)="deleteProduct(pro.id)">
+                  <button type="button" class="btn btn-danger btn-sm ms-2" (click)="deleteProduct(pro.id)">
                     <i class="fas fa-trash"></i>
                   </button>
+                  <button type="button"
+                          class="btn btn-success btn-sm ms-2"
+                          [routerLink]="['/productDetails', pro.id]">
+                    <i class="fas fa-plus"></i>
+                  </button>
+
                 </div>
               </div>
             </ng-template>

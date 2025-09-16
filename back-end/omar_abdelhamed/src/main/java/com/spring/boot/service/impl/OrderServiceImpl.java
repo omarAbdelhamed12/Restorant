@@ -39,12 +39,12 @@ public class OrderServiceImpl implements OrderService {
         UserDto userDto = (UserDto) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         User user = userRepo.findById(userDto.getId())
-                .orElseThrow(() -> new CustomSystemException("User not found"));
+                .orElseThrow(() -> new CustomSystemException("User.not.found"));
 
         // 2- نجيب المنتجات
         List<Product> products = productRepo.findAllById(requestVm.getProductsIds());
         if (products.isEmpty()) {
-            throw new CustomSystemException("No products found with given IDs");
+            throw new CustomSystemException("No.products.found");
         }
 
         // 3- نعمل Order جديد
@@ -62,5 +62,24 @@ public class OrderServiceImpl implements OrderService {
 
         // 5- نرجع Response
         return OrderMapper.ORDER_MAPPER.toOrderResponseVm(savedOrder);
+    }
+
+    @Override
+    public List<OrderResponseVm> getRequestOrderByUserId(Long userId) {
+        UserDto userDto = (UserDto) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        List<Order> order = orderRepo.findByUserIdOrderByIdAsc(userDto.getId());
+        if (order.isEmpty()) {
+            throw new CustomSystemException("order.request.found");
+        }
+        return OrderMapper.ORDER_MAPPER.toOrderResponseVmList(order);
+    }
+
+    @Override
+    public List<OrderResponseVm> getAllRequestOrder( ) {
+        List<Order> orders = orderRepo.findAll();
+        if (orders.isEmpty()) {
+            throw new CustomSystemException("No.order.found");
+        }
+        return OrderMapper.ORDER_MAPPER.toOrderResponseVmList(orders);
     }
 }

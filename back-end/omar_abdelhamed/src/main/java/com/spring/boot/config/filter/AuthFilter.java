@@ -34,7 +34,14 @@ public class AuthFilter extends OncePerRequestFilter {
     private TokenHandler tokenHandler;
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-       String token = request.getHeader("Authorization");
+        String path = request.getServletPath();
+        if (path.startsWith("/swagger-ui") || path.startsWith("/v3/api-docs")
+                || path.equals("/swagger-ui.html") || path.startsWith("/webjars")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        String token = request.getHeader("Authorization");
        if(Objects.isNull(token) || !token.startsWith("Bearer ")) {
            response.reset();
            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);

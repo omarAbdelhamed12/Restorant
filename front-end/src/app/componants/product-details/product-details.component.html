@@ -1,0 +1,83 @@
+<div class="container mt-5">
+  <div class="card shadow-lg border-0 rounded-4">
+    <div class="card-header bg-primary text-white rounded-top-4">
+      <h4 class="mb-0">
+        <i class="bi bi-info-circle-fill me-2"></i>
+        Product Details
+      </h4>
+    </div>
+
+    <div class="card-body p-4">
+
+      <!-- Ingredients -->
+      <div class="mb-3">
+        <label for="ingredients" class="form-label fw-semibold">Ingredients</label>
+        <input
+          id="ingredients"
+          type="text"
+          class="form-control"
+          [(ngModel)]="productDetails.ingredients"
+          (input)="clear()"
+          placeholder="Enter ingredients"
+        />
+        <div *ngIf="isIngredientsValid" class="text-danger small mt-1">
+          Ingredients are required
+        </div>
+      </div>
+
+      <!-- Calories -->
+      <div class="mb-3">
+        <label for="calories" class="form-label fw-semibold">Calories</label>
+        <input
+          id="calories"
+          type="number"
+          class="form-control no-spinners"
+          [(ngModel)]="productDetails.calories"
+          (input)="clear()"
+          placeholder="Enter calories"
+        />
+        <div *ngIf="isCaloriesValid" class="text-danger small mt-1">
+          Calories are required
+        </div>
+      </div>
+
+      <!-- Preparation Time -->
+      <div class="mb-3">
+        <label for="preparationTime" class="form-label fw-semibold">Preparation Time (minutes)</label>
+        <input
+          id="preparationTime"
+          type="number"
+          class="form-control no-spinners"
+          [(ngModel)]="productDetails.preparationTime"
+          (input)="clear()"
+          placeholder="Enter preparation time"
+        />
+        <div *ngIf="isPreparationTimeValid" class="text-danger small mt-1">
+          Preparation is required
+        </div>
+      </div>
+
+      <!-- Backend Error Messages -->
+      <div *ngIf="messageAr || messageEn" class="alert alert-danger rounded-3 shadow-sm mt-4">
+        <h6 class="fw-bold mb-2">
+          <i class="bi bi-exclamation-triangle-fill me-2"></i> Error
+        </h6>
+        <ul class="mb-0 ps-3">
+          <li *ngIf="messageAr" dir="rtl" class="fw-bold">{{ messageAr }}</li>
+          <li *ngIf="messageEn" class="text-muted">{{ messageEn }}</li>
+        </ul>
+      </div>
+
+    </div>
+
+    <!-- Footer Buttons -->
+    <div class="card-footer bg-light d-flex justify-content-end rounded-bottom-4">
+      <button type="button" class="btn btn-success px-4" (click)="saveDetails()">
+        <i class="bi bi-save me-1"></i> Save
+      </button>
+      <a routerLink="/products" class="btn btn-secondary ms-2 px-4">
+        <i class="bi bi-x-circle me-1"></i> Cancel
+      </a>
+    </div>
+  </div>
+</div>

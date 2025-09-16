@@ -31,4 +31,8 @@ public class Product {
 
     @ManyToMany(mappedBy = "products",fetch = FetchType.EAGER)
     private List<Order> orders;
+
+    @OneToOne(mappedBy = "product" , cascade = CascadeType.ALL)
+    private ProductDetails productDetails;
+
 }

@@ -1,0 +1,76 @@
+<div class="container mt-5">
+  <h2 class="mb-4 text-center text-warning">
+    <i class="fa fa-shopping-cart me-2"></i> My Orders
+  </h2>
+
+  <!-- Loading -->
+  <div *ngIf="loading && !errorMessage && !messageAr && !messageEn" class="text-center my-5">
+    <div class="spinner-border text-warning" role="status"></div>
+    <p class="mt-2">Loading your orders...</p>
+  </div>
+
+  <!-- Error -->
+  <div *ngIf="errorMessage" class="alert alert-danger text-center">
+    {{ errorMessage }}
+  </div>
+
+  <!-- Orders Exist -->
+  <div *ngIf="!loading && orders.length > 0" class="row">
+    <div *ngFor="let order of orders" class="col-lg-6 col-md-12">
+      <div class="card shadow-lg mb-4 border-0">
+        <div class="card-header bg-warning text-white d-flex justify-content-between align-items-center">
+          <span><i class="fa fa-receipt me-2"></i> {{ order.code }}</span>
+          <span class="badge bg-light text-dark">Items: {{ order.totalNumber }}</span>
+        </div>
+        <div class="card-body">
+          <h6 class="mb-3">
+            <i class="fa fa-money-bill-wave me-2 text-success"></i>
+            Total Price: <strong>{{ order.totalPrice }} EGP</strong>
+          </h6>
+
+          <h6><i class="fa fa-box-open me-2 text-warning"></i> Products:</h6>
+          <table class="table table-sm table-bordered mt-2">
+            <thead class="table-light">
+            <tr>
+              <th>#</th>
+              <th>Image</th>
+              <th>Name</th>
+              <th>Price</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let product of order.productNames; let i = index">
+              <td>{{ i + 1 }}</td>
+              <td>
+                <img [src]="'../../../assets/img/' + order.imagePath[i]"
+                     [alt]="product"
+                     style="width: 60px; height: 60px; border-radius: 8px;">
+              </td>
+              <td>{{ product }}</td>
+              <td>{{ order.price[i] }} EGP</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- No Orders -->
+  <div *ngIf="!loading && orders.length === 0" class="alert alert-warning text-center">
+    <i class="fa fa-exclamation-circle me-2"></i> No orders found
+  </div>
+</div>
+
+<!-- Backend Error Messages -->
+<div *ngIf="messageAr || messageEn" class="d-flex justify-content-center mt-5">
+  <div class="card shadow-sm p-4 text-center" style="max-width: 500px;">
+    <h5 *ngIf="messageAr" class="fw-bold mb-2 text-warning" dir="rtl">
+      {{ messageAr }}
+    </h5>
+    <hr class="my-3">
+    <p *ngIf="messageEn" class="text-muted mb-0">
+      {{ messageEn }}
+    </p>
+  </div>
+</div>

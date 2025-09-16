@@ -22,7 +22,7 @@ public class ProductDto {
     private String imagePath;
     @NotEmpty(message ="product.description.required")
     private String description;
-    @DecimalMin(value = "100.0", message = "product.price.min")
+    @DecimalMin(value = "30.0", message = "product.price.min")
     @DecimalMax(value = "5000.0", message ="product.price.max")
     private float price;
 

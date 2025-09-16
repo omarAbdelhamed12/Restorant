@@ -23,4 +23,12 @@ export class OrderService {
 
     return this.http.post<OrderResponseVm>(`${this.baseUrl}/request`, orderRequest, { headers });
   }
+
+  getOrdersByUser(): Observable<OrderResponseVm[]> {
+    return this.http.get<OrderResponseVm[]>(`${this.baseUrl}/getRequestByUserId`);
+  }
+  getAllOrders(): Observable<OrderResponseVm[]> {
+    return this.http.get<OrderResponseVm[]>(`${this.baseUrl}/getAllRequest`);
+  }
+
 }

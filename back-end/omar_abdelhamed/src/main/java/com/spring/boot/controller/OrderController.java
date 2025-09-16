@@ -10,6 +10,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping("/order")
@@ -24,4 +25,15 @@ public class OrderController {
     public ResponseEntity<OrderResponseVm> requestOrder(@RequestBody @Valid OrderRequestVm orderRequestVm) {
         return ResponseEntity.created(URI.create("/order/")).body(orderService.requestOrder(orderRequestVm));
     }
+    @GetMapping("/getRequestByUserId")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+    public ResponseEntity<List<OrderResponseVm>> getRequestOrderByUserId(Long userId) {
+        return ResponseEntity.ok(orderService.getRequestOrderByUserId(userId));
+    }
+    @GetMapping("/getAllRequest")
+    @PreAuthorize("permitAll()")
+    public ResponseEntity<List<OrderResponseVm>> getAllRequestOrderByUserId( ) {
+        return ResponseEntity.ok(orderService.getAllRequestOrder());
+    }
+
 }

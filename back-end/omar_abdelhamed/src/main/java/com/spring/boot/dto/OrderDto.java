@@ -23,5 +23,4 @@ public class OrderDto {
     private List<Long> productIds;
     private Long userId;
 
-
 }

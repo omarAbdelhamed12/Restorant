@@ -20,12 +20,19 @@ import {AuthGuard} from '../service/activetor/auth.guard';
 import {LoginSignupGuard} from '../service/activetor/login-signup.guard';
 import {FormsModule} from '@angular/forms';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import { ProductDetailsComponent } from './componants/product-details/product-details.component';
+import { RequestLoginComponent } from './componants/request-login/request-login.component';
+import { RequestAllOrderComponent } from './componants/request-all-order/request-all-order.component';
+
 
 // http://localhost:4200/
 export const routes: Routes = [
 
   // http://localhost:4200/active
   {path: 'products', component: ProductsComponent , canActivate: [AuthGuard] },
+  {path: 'productDetails/:id', component: ProductDetailsComponent , canActivate: [AuthGuard]},
+  {path: 'requestLogin', component: RequestLoginComponent , canActivate: [AuthGuard]},
+  {path: 'requestAllOrder', component: RequestAllOrderComponent , canActivate: [AuthGuard]},
   {path: 'cardDetails', component: CardDetailsComponent , canActivate: [AuthGuard]},
   {path: 'contact-info', component: ContactInfoComponent , canActivate: [AuthGuard]},
   {path: 'chefs', component: ChefsComponent , canActivate: [AuthGuard]},
@@ -58,7 +65,11 @@ export const routes: Routes = [
     ChefsComponent,
     ContactInfoComponent,
     LoginComponent,
-    SignupComponent
+    SignupComponent,
+    ProductDetailsComponent,
+    RequestLoginComponent,
+    RequestAllOrderComponent
+
   ],
   imports: [
     RouterModule.forRoot(routes),
